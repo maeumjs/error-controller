@@ -26,6 +26,7 @@ export default function errorHandler(
     number,
     (err: Error & { validation?: ErrorObject[] }, req: FastifyRequest, reply: FastifyReply) => void
   >,
+  encryptor?: (code: string) => string,
   option?: FastJsonStringiftOptions,
 ) {
   const validationErrorReplyStringify: (data: unknown) => string = fastJsonStringify(
@@ -42,82 +43,101 @@ export default function errorHandler(
     req: FastifyRequest,
     reply: FastifyReply,
   ) => {
-    if (err.validation != null) {
-      const validation = getSchemaValidationError(err.validation);
-      const code = getErrorCode(err, 'P01:14152B97535A4F03B966F88417DEC63E');
+    try {
+      if (err.validation != null) {
+        const validation = getSchemaValidationError(err.validation);
+        const code = getErrorCode(err, 'P01:14152B97535A4F03B966F88417DEC63E', encryptor);
 
-      const data: IMaeumValidationError = {
-        code,
-        validation,
-        message:
-          getFallbackLocale(httpStatusCodes.BAD_REQUEST, locale)?.(
-            req,
-            `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST}`,
-          ) ?? 'invalid request parameter',
-      };
+        const data: IMaeumValidationError = {
+          code,
+          validation,
+          message:
+            getFallbackLocale(httpStatusCodes.BAD_REQUEST, locale)?.(
+              req,
+              `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST}`,
+            ) ?? 'invalid request parameter',
+        };
 
-      const serialized = validationErrorReplyStringify(data);
+        const serialized = validationErrorReplyStringify(data);
 
-      getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
+        getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
 
-      await reply.code(httpStatusCodes.BAD_REQUEST).send(serialized);
+        await reply.code(httpStatusCodes.BAD_REQUEST).send(serialized);
 
-      return;
-    }
-
-    if (isError(err) && err instanceof RestError) {
-      const code = getErrorCode(err, 'P02:d727a4e4ee984bd780517284397a297d');
-      const { status } = err;
-      const message =
-        err.polyglot != null
-          ? getFallbackLocale(status, locale)?.(req, err.polyglot.id, err.polyglot.params) ??
-            err.message
-          : err.message;
-
-      const data: IMaeumRestError = {
-        code,
-        message,
-        data: err.data,
-      };
-
-      const serialized = restReplyStringify(data);
-
-      getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
-
-      await reply.code(httpStatusCodes.BAD_REQUEST).send(serialized);
-
-      return;
-    }
-
-    const handlerIndex = handlers.reduce((selected, handler, idx) => {
-      if (Number.isNaN(selected) && handler.selector(err, req, reply)) {
-        handler.handler(err, req, reply);
-        return idx;
+        return;
       }
 
-      return selected;
-    }, NaN);
+      if (isError(err) && err instanceof RestError) {
+        const code = getErrorCode(err, 'P02:d727a4e4ee984bd780517284397a297d', encryptor);
+        const { status } = err;
+        const message =
+          err.polyglot != null
+            ? getFallbackLocale(status, locale)?.(req, err.polyglot.id, err.polyglot.params) ??
+              err.message
+            : err.message;
 
-    if (isFalse(Number.isNaN(handlerIndex))) {
-      return;
+        const data: IMaeumRestError = {
+          code,
+          message,
+          data: err.data,
+        };
+
+        const serialized = restReplyStringify(data);
+
+        getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
+
+        await reply.code(httpStatusCodes.BAD_REQUEST).send(serialized);
+
+        return;
+      }
+
+      const handlerIndex = handlers.reduce((selected, handler, idx) => {
+        if (Number.isNaN(selected) && handler.selector(err, req, reply)) {
+          handler.handler(err, req, reply);
+          return idx;
+        }
+
+        return selected;
+      }, NaN);
+
+      if (isFalse(Number.isNaN(handlerIndex))) {
+        return;
+      }
+
+      const code = getErrorCode(err, 'P03:f221ec81a80f4c4e9e79038add5c70d2', encryptor);
+
+      const body: IMaeumRestError = {
+        code,
+        message:
+          locale[httpStatusCodes.INTERNAL_SERVER_ERROR]?.(
+            req,
+            `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.INTERNAL_SERVER_ERROR}`,
+          ) ?? err.message,
+      };
+
+      const serialized = restReplyStringify(body);
+
+      getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
+
+      await reply.code(httpStatusCodes.INTERNAL_SERVER_ERROR).send(serialized);
+    } catch (caught) {
+      const code = getErrorCode(err, 'P04:0e5cff808ae44904a267217345dee818', encryptor);
+
+      const body: IMaeumRestError = {
+        code,
+        message:
+          locale[httpStatusCodes.INTERNAL_SERVER_ERROR]?.(
+            req,
+            `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.INTERNAL_SERVER_ERROR}`,
+          ) ?? err.message,
+      };
+
+      const serialized = restReplyStringify(body);
+
+      getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
+
+      await reply.code(httpStatusCodes.INTERNAL_SERVER_ERROR).send(serialized);
     }
-
-    const code = getErrorCode(err, 'P03:f221ec81a80f4c4e9e79038add5c70d2');
-
-    const body: IMaeumRestError = {
-      code,
-      message:
-        locale[httpStatusCodes.INTERNAL_SERVER_ERROR]?.(
-          req,
-          `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.INTERNAL_SERVER_ERROR}`,
-        ) ?? err.message,
-    };
-
-    const serialized = restReplyStringify(body);
-
-    getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
-
-    await reply.code(httpStatusCodes.INTERNAL_SERVER_ERROR).send(serialized);
   };
 
   return hookHandle;
