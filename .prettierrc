@@ -23,6 +23,7 @@
         ".vscode/launch.json",
         ".vscode/settings.json",
         ".swcrc",
+        ".nozzlerc",
         "tsconfig.eslint.json",
         "tsconfig.prod.json",
         "tsconfig.json"

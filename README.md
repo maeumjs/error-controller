@@ -1,12 +1,9 @@
-# TypeScript cli boilerplate
+# @maeum/error-handler
+
+maeum boilerplate error handler creator.
 
 ## installation
 
 ```bash
-# Clone the boilerplate:
-git clone --depth=1 \
-  https://github.com/imjuni/typescript-cli-boilerplate.git \
-  your-project-name
-
-cd your-project-name
+npm i @maeum/error-handler --save
 ```

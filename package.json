@@ -1,13 +1,15 @@
 {
-  "name": "typescript-cli-boilerplate",
-  "version": "1.0.0",
-  "description": "TypeScript cli boilerplate",
+  "name": "@maeum/error-handler",
+  "version": "0.1.0",
+  "description": "maeum boilerplate error handler creator",
   "engines": {
     "node": ">=14"
   },
   "scripts": {
     "dev": "ts-node src/cli.ts",
     "test": "jest --coverage",
+    "ctix:single": "ctix single -c ./.configs/.ctirc -g ./.configs/.ctiignore",
+    "ctix:remove": "ctix remove -c ./.configs/.ctirc -g ./.configs/.ctiignore",
     "clean": "just --config ./.configs/just.config.ts clean",
     "lint": "just --config ./.configs/just.config.ts lint",
     "lint-staged": "lint-staged",
@@ -15,6 +17,9 @@
     "rollup:prod": "just --config ./.configs/just.config.ts rollup:prod",
     "rollup:dev": "just --config ./.configs/just.config.ts rollup:dev",
     "dd": "deps-diff md -d prod -d dev --title-list-type '*' --deps-list-type '*' --content-list-type '*'",
+    "pub": "just --config ./.configs/just.config.ts pub",
+    "pub:prod": "just --config ./.configs/just.config.ts pub:prod",
+    "unpub": "just --config ./.configs/just.config.ts unpub",
     "prepare": "husky install"
   },
   "repository": {
@@ -24,11 +29,19 @@
   "keywords": [],
   "author": "ByungJoon Lee",
   "license": "MIT",
-  "main": "dist/cli.js",
-  "types": "dist/cli.d.ts",
-  "bin": {
-    "nozzle": "dist/cli.js"
+  "main": "dist/cjs/index.cjs",
+  "types": "dist/esm/index.d.ts",
+  "module": "dist/esm/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.cjs",
+      "import": "./dist/esm/index.mjs",
+      "typings": "./dist/esm/index.d.mts"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "bugs": {
     "url": "https://github.com/imjuni/typescript-cli-boilerplate/issues"
   },
@@ -48,7 +61,9 @@
     "@types/yargs": "^17.0.22",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
+    "ajv": "^8.12.0",
     "cross-env": "^7.0.3",
+    "ctix": "^1.8.2",
     "deps-diff": "^1.0.2",
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -60,6 +75,7 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-prettier": "^4.2.1",
     "execa": "^5.1.1",
+    "fastify": "^4.13.0",
     "husky": "^8.0.3",
     "jest": "^29.3.1",
     "just-task": "^1.7.0",
@@ -71,6 +87,7 @@
     "rollup": "^3.17.2",
     "rollup-plugin-dts": "^5.2.0",
     "rollup-plugin-swc3": "^0.8.0",
+    "schema-nozzle": "^0.20.0",
     "ts-jest": "^29.0.4",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2",
@@ -78,15 +95,10 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
-    "cli-progress": "^3.12.0",
-    "find-up": "^5.0.0",
-    "my-easy-fp": "^0.19.3",
-    "ora": "^5.4.1",
-    "pino": "^8.11.0",
-    "pino-pretty": "^9.4.0",
-    "source-map-support": "^0.5.21",
-    "yargs": "^17.7.1"
+    "error-stack-parser": "^2.1.4",
+    "fast-json-stringify": "^5.6.2",
+    "http-status-codes": "^2.2.0",
+    "my-easy-fp": "^0.19.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
