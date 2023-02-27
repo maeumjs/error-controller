@@ -158,6 +158,6 @@ task('+unpub', async () => {
 task('rollup:prod', series('clean', 'ctix:single', '+rollup:prod', 'ctix:remove', 'clean:dts'));
 task('rollup:dev', series('clean', 'ctix:single', '+rollup:dev', 'ctix:remove', 'clean:dts'));
 task('build', series('clean', '+build'));
-task('pub', series('clean', '+rollup:prod', '+pub'));
+task('pub', series('rollup:prod', '+pub'));
 task('unpub', series('clean', '+unpub'));
-task('pub:prod', series('clean', '+rollup:prod', '+pub:prod'));
+task('pub:prod', series('rollup:prod', '+pub:prod'));

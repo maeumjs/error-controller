@@ -11,5 +11,5 @@ export default interface IMaeumErrorHandler {
     err: Error & { validation?: ErrorObject[] },
     req: FastifyRequest,
     reply: FastifyReply,
-  ) => {};
+  ) => unknown;
 }
