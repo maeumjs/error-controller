@@ -20,7 +20,7 @@
     /* Basic Options */
     "declaration": true /* Generates corresponding '.d.ts' file. */,
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
-    "declarationMap": true /* Generates corresponding '.d.ts' file. */,
+    // "declarationMap": true /* Generates corresponding '.d.ts' file. */,
     "sourceMap": true /* Generates corresponding '.map' file. */,
     "outDir": "./dist" /* Redirect output structure to the directory. */,
     "removeComments": true /* Do not emit comments to output. */,

@@ -84,9 +84,9 @@ export default function errorHandler(
 
         const serialized = restReplyStringify(data);
 
-        getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
+        getFallbackHook(status, hook)?.(err, req, reply);
 
-        await reply.code(httpStatusCodes.BAD_REQUEST).send(serialized);
+        await reply.code(status).send(serialized);
 
         return;
       }
