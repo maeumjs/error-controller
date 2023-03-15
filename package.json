@@ -1,12 +1,11 @@
 {
   "name": "@maeum/error-handler",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "maeum boilerplate error handler creator",
   "engines": {
     "node": ">=14"
   },
   "scripts": {
-    "dev": "ts-node src/cli.ts",
     "test": "jest --coverage",
     "ctix:single": "ctix single -c ./.configs/.ctirc -g ./.configs/.ctiignore",
     "ctix:remove": "ctix remove -c ./.configs/.ctirc -g ./.configs/.ctiignore",

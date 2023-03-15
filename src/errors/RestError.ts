@@ -6,6 +6,7 @@ import httpStatusCodes from 'http-status-codes';
 
 type TRestErrorArgs<T> =
   | Error
+  | { error: Error; logging?: Record<string, string> }
   | RestError<T>
   | (Omit<IMaeumRestError<T>, 'code' | 'status' | 'message'> & {
       status?: number;
@@ -58,6 +59,17 @@ export default class RestError<T = unknown>
       });
 
       err.stack = args.stack;
+      return err;
+    }
+
+    if ('error' in args) {
+      const err = new RestError<T>({
+        message: args.error.message,
+        status: httpStatusCodes.INTERNAL_SERVER_ERROR,
+        logging: args.logging,
+      });
+
+      err.stack = args.error.stack;
       return err;
     }
 
