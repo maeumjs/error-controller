@@ -6,14 +6,16 @@ import httpStatusCodes from 'http-status-codes';
 
 type TRestErrorArgs<T> =
   | Error
-  | { error: Error; logging?: Record<string, string> }
+  | { error: Error; code?: string; logging?: Record<string, string> }
   | RestError<T>
   | (Omit<IMaeumRestError<T>, 'code' | 'status' | 'message'> & {
+      code?: string;
       status?: number;
       message: string;
       logging?: Record<string, string>;
     })
   | (Omit<IMaeumRestError<T>, 'code' | 'status' | 'message'> & {
+      code?: string;
       status?: number;
       polyglot: IPolyglot;
       logging?: Record<string, string>;
@@ -23,6 +25,9 @@ export default class RestError<T = unknown>
   extends Error
   implements Omit<IMaeumRestError<T>, 'code'>
 {
+  /** message of error */
+  public readonly code?: string;
+
   /** message of error */
   public readonly message: string;
 
@@ -64,6 +69,7 @@ export default class RestError<T = unknown>
 
     if ('error' in args) {
       const err = new RestError<T>({
+        code: args.code,
         message: args.error.message,
         status: httpStatusCodes.INTERNAL_SERVER_ERROR,
         logging: args.logging,
@@ -75,6 +81,7 @@ export default class RestError<T = unknown>
 
     if (args instanceof RestError) {
       const err = new RestError<T>({
+        code: args.code,
         data: args.data,
         status: args.status,
         message: args.message,
@@ -88,6 +95,7 @@ export default class RestError<T = unknown>
 
     if ('polyglot' in args) {
       const err = new RestError<T>({
+        code: args.code,
         data: args.data,
         status: args.status ?? httpStatusCodes.INTERNAL_SERVER_ERROR,
         message: args.polyglot.id,
@@ -100,6 +108,7 @@ export default class RestError<T = unknown>
     }
 
     const err = new RestError<T>({
+      code: args.code,
       data: args.data,
       status: args.status ?? httpStatusCodes.INTERNAL_SERVER_ERROR,
       message: args.message,
@@ -111,12 +120,14 @@ export default class RestError<T = unknown>
   }
 
   private constructor({
+    code,
     data,
     status,
     message,
     polyglot,
     logging,
   }: {
+    code?: string;
     data?: T;
     status?: number;
     message?: string;
@@ -125,6 +136,7 @@ export default class RestError<T = unknown>
   }) {
     super(message ?? polyglot?.id ?? '');
 
+    this.code = code;
     this.data = data;
     this.message = message ?? polyglot?.id ?? '';
     this.logging = logging;

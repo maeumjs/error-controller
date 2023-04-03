@@ -12,7 +12,7 @@ const maeumRestErrorSchema = {
     },
     data: {},
   },
-  required: ['code', 'message'],
+  required: ['message'],
   $id: 'IMaeumValidationError',
 };
 

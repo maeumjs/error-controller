@@ -1,6 +1,6 @@
 export default interface IMaeumRestError<T = unknown> {
   /** code of error */
-  code: string;
+  code?: string;
 
   /** description of error */
   message: string;

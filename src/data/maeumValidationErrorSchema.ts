@@ -29,7 +29,7 @@ const maeumValidationErrorSchema = {
       description: 'information of validator result',
     },
   },
-  required: ['code', 'message', 'validation'],
+  required: ['message', 'validation'],
   $id: 'IMaeumValidationError',
 };
 

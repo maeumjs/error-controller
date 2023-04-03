@@ -2,17 +2,18 @@ import getErrorCode from '#modules/getErrorCode';
 import getFallbackHook from '#modules/getFallbackHook';
 import getFallbackLocale from '#modules/getFallbackLocale';
 import getSchemaValidationError from '#modules/getSchemaValidationError';
+import getSourceLocation from '#modules/getSourceLocation';
 import { CE_MAEUM_ERROR_HANDLER_LOCALE_ID } from '#modules/interfaces/CE_MAEUM_ERROR_HANDLER_LOCALE_ID';
 import type IMaeumErrorHandler from '#modules/interfaces/IMaeumErrorHandler';
 import type IMaeumRestError from '#modules/interfaces/IMaeumRestError';
 import type IMaeumValidationError from '#modules/interfaces/IMaeumValidationError';
-import maeumRestErrorSchema from '#modules/interfaces/maeumRestErrorSchema';
-import maeumValidationErrorSchema from '#modules/interfaces/maeumValidationErrorSchema';
 import type { ErrorObject } from 'ajv';
 import fastJsonStringify, { type Options as FastJsonStringiftOptions } from 'fast-json-stringify';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
 import { isError, isFalse } from 'my-easy-fp';
+import maeumRestErrorSchema from 'src/data/maeumRestErrorSchema';
+import maeumValidationErrorSchema from 'src/data/maeumValidationErrorSchema';
 import RestError from 'src/errors/RestError';
 
 export default function errorHandler(
@@ -46,29 +47,72 @@ export default function errorHandler(
     try {
       if (err.validation != null) {
         const validation = getSchemaValidationError(err.validation);
-        const code = getErrorCode(err, 'P01:14152B97535A4F03B966F88417DEC63E', encryptor);
+        const code = getErrorCode(err);
+        const sourceLocation = getSourceLocation(
+          err,
+          'P01:14152B97535A4F03B966F88417DEC63E',
+          encryptor,
+        );
 
-        const data: IMaeumValidationError = {
-          code,
-          validation,
-          message:
-            getFallbackLocale(httpStatusCodes.BAD_REQUEST, locale)?.(
-              req,
-              `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST}`,
-            ) ?? 'invalid request parameter',
+        const getValidationErrorData = () => {
+          if (code == null) {
+            const data: IMaeumValidationError = {
+              code: sourceLocation,
+              message:
+                getFallbackLocale(httpStatusCodes.BAD_REQUEST, locale)?.(
+                  req,
+                  `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST}`,
+                ) ?? 'invalid request parameter',
+              validation,
+            };
+
+            return data;
+          }
+
+          if ('data' in err && err.data != null && typeof err.data === 'object') {
+            const data: IMaeumValidationError & { data: unknown } = {
+              code,
+              message:
+                getFallbackLocale(httpStatusCodes.BAD_REQUEST, locale)?.(
+                  req,
+                  `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST}`,
+                ) ?? 'invalid request parameter',
+              validation,
+              data: { ...err.data, source: sourceLocation },
+            };
+
+            return data;
+          }
+
+          const data: IMaeumValidationError & { data?: string } = {
+            code,
+            validation,
+            message:
+              getFallbackLocale(httpStatusCodes.BAD_REQUEST, locale)?.(
+                req,
+                `${prefix}${CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST}`,
+              ) ?? 'invalid request parameter',
+            data: sourceLocation,
+          };
+
+          return data;
         };
 
+        const data: IMaeumValidationError = getValidationErrorData();
         const serialized = validationErrorReplyStringify(data);
-
         getFallbackHook(httpStatusCodes.BAD_REQUEST, hook)?.(err, req, reply);
-
         await reply.code(httpStatusCodes.BAD_REQUEST).send(serialized);
 
         return;
       }
 
       if (isError(err) && err instanceof RestError) {
-        const code = getErrorCode(err, 'P02:d727a4e4ee984bd780517284397a297d', encryptor);
+        const sourceLocation = getSourceLocation(
+          err,
+          'P02:d727a4e4ee984bd780517284397a297d',
+          encryptor,
+        );
+        const code = getErrorCode(err);
         const { status } = err;
         const message =
           err.polyglot != null
@@ -76,16 +120,39 @@ export default function errorHandler(
               err.message
             : err.message;
 
-        const data: IMaeumRestError = {
-          code,
-          message,
-          data: err.data,
+        const getErrorDataHandler = (): IMaeumRestError => {
+          if (code == null) {
+            const data: IMaeumRestError = {
+              code: sourceLocation,
+              message,
+              data: err.data,
+            };
+
+            return data;
+          }
+
+          if (err.data == null) {
+            const data: IMaeumRestError = {
+              code,
+              message,
+              data: sourceLocation,
+            };
+
+            return data;
+          }
+
+          const data: IMaeumRestError = {
+            code,
+            message,
+            data: { ...err.data, source: sourceLocation },
+          };
+
+          return data;
         };
 
+        const data = getErrorDataHandler();
         const serialized = restReplyStringify(data);
-
         getFallbackHook(status, hook)?.(err, req, reply);
-
         await reply.code(status).send(serialized);
 
         return;
@@ -104,7 +171,7 @@ export default function errorHandler(
         return;
       }
 
-      const code = getErrorCode(err, 'P03:f221ec81a80f4c4e9e79038add5c70d2', encryptor);
+      const code = getSourceLocation(err, 'P03:f221ec81a80f4c4e9e79038add5c70d2', encryptor);
 
       const body: IMaeumRestError = {
         code,
@@ -121,7 +188,7 @@ export default function errorHandler(
 
       await reply.code(httpStatusCodes.INTERNAL_SERVER_ERROR).send(serialized);
     } catch (caught) {
-      const code = getErrorCode(err, 'P04:0e5cff808ae44904a267217345dee818', encryptor);
+      const code = getSourceLocation(err, 'P04:0e5cff808ae44904a267217345dee818', encryptor);
 
       const body: IMaeumRestError = {
         code,
