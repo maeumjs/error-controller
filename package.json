@@ -1,6 +1,6 @@
 {
   "name": "@maeum/error-handler",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "maeum boilerplate error handler creator",
   "engines": {
     "node": ">=14"
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/imjuni/typescript-cli-boilerplate.git"
+    "url": "git+https://github.com/maeumjs/maeum-error-handler.git"
   },
   "keywords": [],
   "author": "ByungJoon Lee",
@@ -42,9 +42,9 @@
     "dist"
   ],
   "bugs": {
-    "url": "https://github.com/imjuni/typescript-cli-boilerplate/issues"
+    "url": "https://github.com/maeumjs/maeum-error-handler/issues"
   },
-  "homepage": "https://github.com/imjuni/typescript-cli-boilerplate#readme",
+  "homepage": "https://github.com/maeumjs/maeum-error-handler#readme",
   "devDependencies": {
     "@jest/test-sequencer": "^29.4.3",
     "@rollup/plugin-node-resolve": "^15.0.1",
@@ -74,7 +74,7 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-prettier": "^4.2.1",
     "execa": "^5.1.1",
-    "fastify": "^4.13.0",
+    "fastify": "^4.15.0",
     "husky": "^8.0.3",
     "jest": "^29.3.1",
     "just-task": "^1.7.0",
@@ -97,7 +97,8 @@
     "error-stack-parser": "^2.1.4",
     "fast-json-stringify": "^5.6.2",
     "http-status-codes": "^2.2.0",
-    "my-easy-fp": "^0.19.3"
+    "my-easy-fp": "^0.19.3",
+    "type-fest": "^3.8.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

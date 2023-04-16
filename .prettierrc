@@ -4,7 +4,6 @@
   "printWidth": 100,
   "arrowParens": "always",
   "parser": "typescript",
-  "endOfLine": "lf",
   "overrides": [
     {
       "files": "*.md",
@@ -13,17 +12,18 @@
       }
     },
     {
-      "files": ".eslintrc.cjs",
+      "files": [
+        ".configs/.nozzlerc",
+        ".configs/.fastmakerrc"
+      ],
       "options": {
-        "parser": "babel"
+        "parser": "json"
       }
     },
     {
       "files": [
         ".vscode/launch.json",
         ".vscode/settings.json",
-        ".swcrc",
-        ".nozzlerc",
         "tsconfig.eslint.json",
         "tsconfig.prod.json",
         "tsconfig.json"
