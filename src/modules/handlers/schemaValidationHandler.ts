@@ -27,7 +27,7 @@ export default function schemaValidationHandler(
 ) {
   executeHook({
     hooks: options.hooks,
-    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR,
+    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST,
     type: 'pre',
     err,
     req,
@@ -35,8 +35,8 @@ export default function schemaValidationHandler(
   });
 
   const getMessageId =
-    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR] != null
-      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
+    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST] != null
+      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]!
       : (id: string) => id;
   const schemaValidation = getSchemaValidationError(validation);
   const code = getErrorCode(err);
@@ -51,7 +51,7 @@ export default function schemaValidationHandler(
       const data: IMaeumValidationError = {
         code: sourceLocation,
         message:
-          options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]?.(
+          options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]?.(
             req,
             getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE.BAD_REQUEST),
           ) ?? 'invalid request parameter',
@@ -65,7 +65,7 @@ export default function schemaValidationHandler(
       const data: IMaeumValidationError & { data: unknown } = {
         code,
         message:
-          options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]?.(
+          options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]?.(
             req,
             getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE.BAD_REQUEST),
           ) ?? 'invalid request parameter',
@@ -80,7 +80,7 @@ export default function schemaValidationHandler(
       code,
       validation: schemaValidation,
       message:
-        options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]?.(
+        options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]?.(
           req,
           getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE.BAD_REQUEST),
         ) ?? 'invalid request parameter',
@@ -95,7 +95,7 @@ export default function schemaValidationHandler(
 
   executeHook({
     hooks: options.hooks,
-    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR,
+    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST,
     type: 'post',
     err,
     req,
