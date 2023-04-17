@@ -14,7 +14,7 @@ export default function restErrorHandler(
   req: FastifyRequest,
   reply: FastifyReply,
   options: {
-    messageHandles?: TMaeumMessageIdHandles;
+    messages?: TMaeumMessageIdHandles;
     locales: TMaeumErrorHandlerLocales;
     restReplyStringify: (data: unknown) => string;
     hooks?: TMaeumErrorHandlerHooks;
@@ -31,8 +31,8 @@ export default function restErrorHandler(
   });
 
   const getMessageId =
-    options.messageHandles?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR] != null
-      ? options.messageHandles[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR]!
+    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR] != null
+      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR]!
       : (id: string) => id;
   const code = getErrorCode(err);
   const { status } = err;

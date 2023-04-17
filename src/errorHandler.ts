@@ -24,7 +24,7 @@ export default function errorHandler(
   locale: TMaeumErrorHandlerLocales,
   options?: {
     hooks?: TMaeumErrorHandlerHooks;
-    messageHandles?: TMaeumMessageIdHandles;
+    messages?: TMaeumMessageIdHandles;
     encryptor?: TMaeumEncryptor;
     fastJsonStringiftOptions?: FastJsonStringiftOptions;
   },
@@ -65,7 +65,7 @@ export default function errorHandler(
         schemaValidationHandler(err, err.validation, req, reply, {
           locale,
           validationErrorReplyStringify,
-          messageHandles: options?.messageHandles,
+          messages: options?.messages,
           hooks: options?.hooks,
           encryptor: options?.encryptor,
         });
@@ -73,7 +73,7 @@ export default function errorHandler(
         restErrorHandler(err, req, reply, {
           locales: locale,
           restReplyStringify,
-          messageHandles: options?.messageHandles,
+          messages: options?.messages,
           hooks: options?.hooks,
           encryptor: options?.encryptor,
         });
@@ -93,10 +93,8 @@ export default function errorHandler(
           options?.encryptor,
         );
         const getMessageId =
-          options?.messageHandles?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SERVER_ERROR] != null
-            ? options.messageHandles[
-                CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR
-              ]!
+          options?.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SERVER_ERROR] != null
+            ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
             : (id: string) => id;
 
         const body: IMaeumRestError = {
@@ -130,8 +128,8 @@ export default function errorHandler(
       );
 
       const getMessageId =
-        options?.messageHandles?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SERVER_ERROR] != null
-          ? options.messageHandles[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
+        options?.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SERVER_ERROR] != null
+          ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
           : (id: string) => id;
 
       const body: IMaeumRestError = {

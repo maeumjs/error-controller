@@ -18,7 +18,7 @@ export default function schemaValidationHandler(
   req: FastifyRequest,
   reply: FastifyReply,
   options: {
-    messageHandles?: TMaeumMessageIdHandles;
+    messages?: TMaeumMessageIdHandles;
     locale: TMaeumErrorHandlerLocales;
     validationErrorReplyStringify: (data: unknown) => string;
     hooks?: TMaeumErrorHandlerHooks;
@@ -35,8 +35,8 @@ export default function schemaValidationHandler(
   });
 
   const getMessageId =
-    options.messageHandles?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR] != null
-      ? options.messageHandles[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
+    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR] != null
+      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
       : (id: string) => id;
   const schemaValidation = getSchemaValidationError(validation);
   const code = getErrorCode(err);
