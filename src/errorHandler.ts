@@ -80,7 +80,7 @@ export default function errorHandler(
       } else {
         executeHook({
           hooks: options?.hooks,
-          id: CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR,
+          id: CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST,
           type: 'pre',
           err,
           req,
@@ -93,14 +93,14 @@ export default function errorHandler(
           options?.encryptor,
         );
         const getMessageId =
-          options?.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SERVER_ERROR] != null
-            ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
+          options?.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.INTERNAL_SERVER_ERROR] != null
+            ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.INTERNAL_SERVER_ERROR]!
             : (id: string) => id;
 
         const body: IMaeumRestError = {
           code,
           message:
-            locale[httpStatusCodes.INTERNAL_SERVER_ERROR]?.(
+            locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.INTERNAL_SERVER_ERROR]?.(
               req,
               getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE.INTERNAL_SERVER_ERROR),
             ) ?? err.message,
@@ -110,7 +110,7 @@ export default function errorHandler(
 
         executeHook({
           hooks: options?.hooks,
-          id: CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR,
+          id: CE_MAEUM_DEFAULT_ERROR_HANDLER.INTERNAL_SERVER_ERROR,
           type: 'post',
           err,
           req,
@@ -128,8 +128,8 @@ export default function errorHandler(
       );
 
       const getMessageId =
-        options?.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SERVER_ERROR] != null
-          ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR]!
+        options?.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.INTERNAL_SERVER_ERROR] != null
+          ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]!
           : (id: string) => id;
 
       const body: IMaeumRestError = {
@@ -145,7 +145,7 @@ export default function errorHandler(
 
       executeHook({
         hooks: options?.hooks,
-        id: CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_SCHEMA_VALIDATION_ERROR,
+        id: CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST,
         type: 'post',
         err,
         req,

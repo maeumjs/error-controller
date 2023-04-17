@@ -23,7 +23,7 @@ export default function restErrorHandler(
 ) {
   executeHook({
     hooks: options.hooks,
-    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR,
+    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR,
     type: 'pre',
     err,
     req,
@@ -31,8 +31,8 @@ export default function restErrorHandler(
   });
 
   const getMessageId =
-    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR] != null
-      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR]!
+    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR] != null
+      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR]!
       : (id: string) => id;
   const code = getErrorCode(err);
   const { status } = err;
@@ -51,7 +51,7 @@ export default function restErrorHandler(
       return err.message;
     }
 
-    const message = options.locales[CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR]?.(
+    const message = options.locales[CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR]?.(
       req,
       getMessageId(err.polyglot.id),
       err.polyglot.params,
@@ -105,7 +105,7 @@ export default function restErrorHandler(
 
   executeHook({
     hooks: options.hooks,
-    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.DEFAULT_REST_ERROR,
+    id: CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR,
     type: 'post',
     err,
     req,
