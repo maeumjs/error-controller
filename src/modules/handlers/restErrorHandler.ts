@@ -1,6 +1,8 @@
 import type RestError from '#errors/RestError';
 import executeHook from '#modules/executeHook';
 import getErrorCode from '#modules/getErrorCode';
+import getLocaleHandler from '#modules/getLocaleHandler';
+import getMessageIdHandler from '#modules/getMessageIdHandler';
 import getSourceLocation from '#modules/getSourceLocation';
 import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from '#modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
 import type IMaeumRestError from '#modules/interfaces/IMaeumRestError';
@@ -30,10 +32,12 @@ export default function restErrorHandler(
     reply,
   });
 
-  const getMessageId =
-    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR] != null
-      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR]!
-      : (id: string) => id;
+  const getMessageId = getMessageIdHandler(
+    options.messages,
+    CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR,
+  );
+  const getLocale = getLocaleHandler(options.locales, CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR);
+
   const code = getErrorCode(err);
   const { status } = err;
   const sourceLocation = getSourceLocation(
@@ -51,11 +55,7 @@ export default function restErrorHandler(
       return err.message;
     }
 
-    const message = options.locales[CE_MAEUM_DEFAULT_ERROR_HANDLER.REST_ERROR]?.(
-      req,
-      getMessageId(err.polyglot.id),
-      err.polyglot.params,
-    );
+    const message = getLocale?.(req, getMessageId(err.polyglot.id), err.polyglot.params);
 
     if (message == null && err.message === '') {
       return 'internal server error';

@@ -1,9 +1,11 @@
 import executeHook from '#modules/executeHook';
 import getErrorCode from '#modules/getErrorCode';
+import getLocaleHandler from '#modules/getLocaleHandler';
+import getMessageIdHandler from '#modules/getMessageIdHandler';
 import getSchemaValidationError from '#modules/getSchemaValidationError';
 import getSourceLocation from '#modules/getSourceLocation';
 import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from '#modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
-import { CE_MAEUM_ERROR_HANDLER_LOCALE } from '#modules/interfaces/CE_MAEUM_ERROR_HANDLER_LOCALE';
+import { CE_MAEUM_ERROR_HANDLER_LOCALE_ID } from '#modules/interfaces/CE_MAEUM_ERROR_HANDLER_LOCALE_ID';
 import type IMaeumValidationError from '#modules/interfaces/IMaeumValidationError';
 import type TMaeumErrorHandlerHooks from '#modules/interfaces/TMaeumErrorHandlerHooks';
 import type TMaeumErrorHandlerLocales from '#modules/interfaces/TMaeumErrorHandlerLocales';
@@ -19,7 +21,7 @@ export default function schemaValidationHandler(
   reply: FastifyReply,
   options: {
     messages?: TMaeumMessageIdHandles;
-    locale: TMaeumErrorHandlerLocales;
+    locales: TMaeumErrorHandlerLocales;
     validationErrorReplyStringify: (data: unknown) => string;
     hooks?: TMaeumErrorHandlerHooks;
     encryptor?: (code: string) => string;
@@ -34,10 +36,12 @@ export default function schemaValidationHandler(
     reply,
   });
 
-  const getMessageId =
-    options.messages?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST] != null
-      ? options.messages[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]!
-      : (id: string) => id;
+  const getMessageId = getMessageIdHandler(
+    options.messages,
+    CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST,
+  );
+  const getLocale = getLocaleHandler(options.locales, CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST);
+
   const schemaValidation = getSchemaValidationError(validation);
   const code = getErrorCode(err);
   const sourceLocation = getSourceLocation(
@@ -51,10 +55,8 @@ export default function schemaValidationHandler(
       const data: IMaeumValidationError = {
         code: sourceLocation,
         message:
-          options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]?.(
-            req,
-            getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE.BAD_REQUEST),
-          ) ?? 'invalid request parameter',
+          getLocale?.(req, getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST)) ??
+          'invalid request parameter',
         validation: schemaValidation,
       };
 
@@ -65,10 +67,8 @@ export default function schemaValidationHandler(
       const data: IMaeumValidationError & { data: unknown } = {
         code,
         message:
-          options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]?.(
-            req,
-            getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE.BAD_REQUEST),
-          ) ?? 'invalid request parameter',
+          getLocale?.(req, getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST)) ??
+          'invalid request parameter',
         validation: schemaValidation,
         data: { ...err.data, source: sourceLocation },
       };
@@ -80,10 +80,8 @@ export default function schemaValidationHandler(
       code,
       validation: schemaValidation,
       message:
-        options.locale[CE_MAEUM_DEFAULT_ERROR_HANDLER.BAD_REQUEST]?.(
-          req,
-          getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE.BAD_REQUEST),
-        ) ?? 'invalid request parameter',
+        getLocale?.(req, getMessageId(CE_MAEUM_ERROR_HANDLER_LOCALE_ID.BAD_REQUEST)) ??
+        'invalid request parameter',
       data: sourceLocation,
     };
 

@@ -2,6 +2,7 @@ import type TMaeumErrorHandlerHooks from '#modules/interfaces/TMaeumErrorHandler
 import type { IMaeumErrorHandlerHook } from '#modules/interfaces/TMaeumErrorHandlerHooks';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from './interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
 
 export default function executeHook({
   hooks,
@@ -23,6 +24,12 @@ export default function executeHook({
 
     if (handler != null) {
       handler(err, req, reply);
+    } else {
+      const common = hooks?.[CE_MAEUM_DEFAULT_ERROR_HANDLER.COMMON]?.[type];
+
+      if (common != null) {
+        common(err, req, reply);
+      }
     }
   } catch {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
