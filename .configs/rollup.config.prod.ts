@@ -1,5 +1,4 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -42,7 +41,6 @@ export default [
         },
       }),
       swc(),
-      terser(),
     ],
   },
   {
