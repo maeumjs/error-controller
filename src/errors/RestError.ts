@@ -26,22 +26,22 @@ export default class RestError<T = unknown>
   implements Omit<IMaeumRestError<T>, 'code'>
 {
   /** message of error */
-  public readonly code?: string;
+  accessor code: string | undefined;
 
   /** message of error */
-  public readonly message: string;
+  accessor message: string;
 
   /** additional data for response */
-  public readonly data?: T;
+  accessor data: T | undefined;
 
   /** http status code */
-  public readonly status: number;
+  accessor status: number;
 
   /** polyglot information */
-  public readonly polyglot?: IPolyglot;
+  accessor polyglot: IPolyglot | undefined;
 
   /** additional information for logging */
-  public readonly logging?: Record<string, unknown>;
+  accessor logging: Record<string, unknown> | undefined;
 
   public static getRefiedStack<T>(err: RestError<T>): string | undefined {
     try {
