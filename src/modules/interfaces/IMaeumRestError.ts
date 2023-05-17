@@ -9,5 +9,5 @@ export default interface IMaeumRestError<TBodyType = unknown, THeaderType = unkn
   header?: THeaderType;
 
   /** additional body data for error */
-  body?: TBodyType;
+  data?: TBodyType;
 }

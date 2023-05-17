@@ -21,9 +21,9 @@ type TRestErrorArgs<T> =
       logging?: Record<string, string>;
     });
 
-export default class RestError<TBodyType = unknown, THeaderType = unknown>
+export default class RestError<TDataType = unknown, THeaderType = unknown>
   extends Error
-  implements Omit<IMaeumRestError<TBodyType, THeaderType>, 'code'>
+  implements Omit<IMaeumRestError<TDataType, THeaderType>, 'code'>
 {
   /** message of error */
   accessor code: string | undefined;
@@ -35,7 +35,7 @@ export default class RestError<TBodyType = unknown, THeaderType = unknown>
   accessor header: THeaderType | undefined;
 
   /** additional body data for response */
-  accessor body: TBodyType | undefined;
+  accessor data: TDataType | undefined;
 
   /** http status code */
   accessor status: number;
@@ -85,7 +85,7 @@ export default class RestError<TBodyType = unknown, THeaderType = unknown>
     if (args instanceof RestError) {
       const err = new RestError<T>({
         code: args.code,
-        body: args.body,
+        data: args.data,
         header: args.header,
         status: args.status,
         message: args.message,
@@ -100,7 +100,7 @@ export default class RestError<TBodyType = unknown, THeaderType = unknown>
     if ('polyglot' in args) {
       const err = new RestError<T>({
         code: args.code,
-        body: args.body,
+        data: args.data,
         header: args.header,
         status: args.status ?? httpStatusCodes.INTERNAL_SERVER_ERROR,
         message: args.polyglot.id,
@@ -114,7 +114,7 @@ export default class RestError<TBodyType = unknown, THeaderType = unknown>
 
     const err = new RestError<T>({
       code: args.code,
-      body: args.body,
+      data: args.data,
       header: args.header,
       status: args.status ?? httpStatusCodes.INTERNAL_SERVER_ERROR,
       message: args.message,
@@ -127,7 +127,7 @@ export default class RestError<TBodyType = unknown, THeaderType = unknown>
 
   private constructor({
     code,
-    body,
+    data,
     header,
     status,
     message,
@@ -135,7 +135,7 @@ export default class RestError<TBodyType = unknown, THeaderType = unknown>
     logging,
   }: {
     code?: string;
-    body?: TBodyType;
+    data?: TDataType;
     header?: THeaderType;
     status?: number;
     message?: string;
@@ -145,7 +145,7 @@ export default class RestError<TBodyType = unknown, THeaderType = unknown>
     super(message ?? polyglot?.id ?? '');
 
     this.code = code;
-    this.body = body;
+    this.data = data;
     this.header = header;
     this.message = message ?? polyglot?.id ?? '';
     this.logging = logging;
