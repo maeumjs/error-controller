@@ -100,6 +100,13 @@ export default function schemaValidationHandler(
     reply,
   });
 
+  if ('header' in err && typeof err.header === 'object' && err.header != null) {
+    Object.entries(err.header).forEach(([key, value]) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      reply.header(key, value);
+    });
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   reply.code(httpStatusCodes.BAD_REQUEST).send(serialized);
 }

@@ -75,17 +75,17 @@ export default function restErrorHandler(
       const data: IMaeumRestError = {
         code: sourceLocation,
         message,
-        data: err.data,
+        body: err.body,
       };
 
       return data;
     }
 
-    if (err.data == null) {
+    if (err.body == null) {
       const data: IMaeumRestError = {
         code,
         message,
-        data: sourceLocation,
+        body: sourceLocation,
       };
 
       return data;
@@ -94,7 +94,7 @@ export default function restErrorHandler(
     const data: IMaeumRestError = {
       code,
       message,
-      data: { ...err.data, source: sourceLocation },
+      body: { ...err.body, source: sourceLocation },
     };
 
     return data;
@@ -111,6 +111,13 @@ export default function restErrorHandler(
     req,
     reply,
   });
+
+  if (err.header != null) {
+    Object.entries(err.header).forEach(([key, value]) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      reply.header(key, value);
+    });
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
   reply.code(status).send(serialized);
