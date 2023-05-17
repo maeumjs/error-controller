@@ -10,7 +10,7 @@ const maeumRestErrorSchema = {
       type: 'string',
       description: 'description of error',
     },
-    body: {},
+    data: {},
     header: {},
   },
   required: ['message'],

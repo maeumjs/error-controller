@@ -75,17 +75,17 @@ export default function restErrorHandler(
       const data: IMaeumRestError = {
         code: sourceLocation,
         message,
-        body: err.body,
+        data: err.data,
       };
 
       return data;
     }
 
-    if (err.body == null) {
+    if (err.data == null) {
       const data: IMaeumRestError = {
         code,
         message,
-        body: sourceLocation,
+        data: sourceLocation,
       };
 
       return data;
@@ -94,7 +94,7 @@ export default function restErrorHandler(
     const data: IMaeumRestError = {
       code,
       message,
-      body: { ...err.body, source: sourceLocation },
+      data: { ...err.data, source: sourceLocation },
     };
 
     return data;
