@@ -119,6 +119,13 @@ export default function errorHandler(
           reply,
         });
 
+        if ('header' in err && typeof err.header === 'object' && err.header != null) {
+          Object.entries(err.header).forEach(([key, value]) => {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            reply.header(key, value);
+          });
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         reply.code(httpStatusCodes.INTERNAL_SERVER_ERROR).send(serialized);
       }
@@ -153,6 +160,13 @@ export default function errorHandler(
         req,
         reply,
       });
+
+      if ('header' in err && typeof err.header === 'object' && err.header != null) {
+        Object.entries(err.header).forEach(([key, value]) => {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          reply.header(key, value);
+        });
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       reply.code(httpStatusCodes.INTERNAL_SERVER_ERROR).send(serialized);
