@@ -49,6 +49,32 @@ export default function errorHandler(
       const handlerIndex = handlers.reduce((selected, handler, idx) => {
         if (Number.isNaN(selected) && handler.selector(err, req, reply)) {
           try {
+            executeHook({
+              hooks: options?.hooks,
+              id: handler.id,
+              type: 'pre',
+              err,
+              req,
+              reply,
+            });
+
+            const sendBakup = reply.send.bind(reply);
+            const sendWithHook = (payload?: unknown) => {
+              executeHook({
+                hooks: options?.hooks,
+                id: handler.id,
+                type: 'post',
+                err,
+                req,
+                reply,
+              });
+
+              // eslint-disable-next-line @typescript-eslint/no-floating-promises
+              return sendBakup(payload);
+            };
+            // eslint-disable-next-line no-param-reassign
+            reply.send = sendWithHook.bind(reply);
+
             handler.handler(err, req, reply);
             return idx;
           } catch {
