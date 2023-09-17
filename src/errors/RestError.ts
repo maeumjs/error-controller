@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type IMaeumRestError from '#modules/interfaces/IMaeumRestError';
-import type IPolyglot from '#modules/interfaces/IPolyglot';
 import ErrorStackParser from 'error-stack-parser';
 import httpStatusCodes from 'http-status-codes';
+import type IMaeumRestError from 'src/modules/interfaces/IMaeumRestError';
+import type IPolyglot from 'src/modules/interfaces/IPolyglot';
 
 type TRestErrorArgs<T> =
   | Error
@@ -85,7 +84,7 @@ export default class RestError<TDataType = unknown, THeaderType = unknown>
     if (args instanceof RestError) {
       const err = new RestError<T>({
         code: args.code,
-        data: args.data,
+        data: args.data as T,
         header: args.header,
         status: args.status,
         message: args.message,

@@ -1,6 +1,6 @@
-import getSourceLocation from '#modules/getSourceLocation';
 import ErrorStackParser from 'error-stack-parser';
 import 'jest';
+import getSourceLocation from 'src/modules/getSourceLocation';
 
 describe('getErrorCode', () => {
   test('pass', () => {

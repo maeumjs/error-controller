@@ -1,15 +1,15 @@
-import type RestError from '#errors/RestError';
-import executeHook from '#modules/executeHook';
-import getErrorCode from '#modules/getErrorCode';
-import getLocaleHandler from '#modules/getLocaleHandler';
-import getMessageIdHandler from '#modules/getMessageIdHandler';
-import getSourceLocation from '#modules/getSourceLocation';
-import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from '#modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
-import type IMaeumRestError from '#modules/interfaces/IMaeumRestError';
-import type TMaeumErrorHandlerHooks from '#modules/interfaces/TMaeumErrorHandlerHooks';
-import type TMaeumErrorHandlerLocales from '#modules/interfaces/TMaeumErrorHandlerLocales';
-import type TMaeumMessageIdHandles from '#modules/interfaces/TMaeumMessageIdHandles';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import type RestError from 'src/errors/RestError';
+import executeHook from 'src/modules/executeHook';
+import getErrorCode from 'src/modules/getErrorCode';
+import getLocaleHandler from 'src/modules/getLocaleHandler';
+import getMessageIdHandler from 'src/modules/getMessageIdHandler';
+import getSourceLocation from 'src/modules/getSourceLocation';
+import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from 'src/modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
+import type IMaeumRestError from 'src/modules/interfaces/IMaeumRestError';
+import type TMaeumErrorHandlerHooks from 'src/modules/interfaces/TMaeumErrorHandlerHooks';
+import type TMaeumErrorHandlerLocales from 'src/modules/interfaces/TMaeumErrorHandlerLocales';
+import type TMaeumMessageIdHandles from 'src/modules/interfaces/TMaeumMessageIdHandles';
 
 export default function restErrorHandler(
   err: RestError,

@@ -1,4 +1,4 @@
-import type { TMaeumGetMessageId } from '#modules/interfaces/MaeumFunctions';
+import type { TMaeumGetMessageId } from 'src/modules/interfaces/MaeumFunctions';
 
 type TMaeumMessageIdHandles = Record<string, TMaeumGetMessageId>;
 

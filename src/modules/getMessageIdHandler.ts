@@ -1,6 +1,6 @@
-import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from '#modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
-import type { TMaeumGetMessageId } from '#modules/interfaces/MaeumFunctions';
-import type TMaeumMessageIdHandles from '#modules/interfaces/TMaeumMessageIdHandles';
+import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from 'src/modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
+import type { TMaeumGetMessageId } from 'src/modules/interfaces/MaeumFunctions';
+import type TMaeumMessageIdHandles from 'src/modules/interfaces/TMaeumMessageIdHandles';
 
 export default function getMessageIdHandler(
   messages: TMaeumMessageIdHandles | undefined,

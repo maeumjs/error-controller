@@ -1,18 +1,18 @@
-import executeHook from '#modules/executeHook';
-import getErrorCode from '#modules/getErrorCode';
-import getLocaleHandler from '#modules/getLocaleHandler';
-import getMessageIdHandler from '#modules/getMessageIdHandler';
-import getSchemaValidationError from '#modules/getSchemaValidationError';
-import getSourceLocation from '#modules/getSourceLocation';
-import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from '#modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
-import { CE_MAEUM_ERROR_HANDLER_LOCALE_ID } from '#modules/interfaces/CE_MAEUM_ERROR_HANDLER_LOCALE_ID';
-import type IMaeumValidationError from '#modules/interfaces/IMaeumValidationError';
-import type TMaeumErrorHandlerHooks from '#modules/interfaces/TMaeumErrorHandlerHooks';
-import type TMaeumErrorHandlerLocales from '#modules/interfaces/TMaeumErrorHandlerLocales';
-import type TMaeumMessageIdHandles from '#modules/interfaces/TMaeumMessageIdHandles';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
+import executeHook from 'src/modules/executeHook';
+import getErrorCode from 'src/modules/getErrorCode';
+import getLocaleHandler from 'src/modules/getLocaleHandler';
+import getMessageIdHandler from 'src/modules/getMessageIdHandler';
+import getSchemaValidationError from 'src/modules/getSchemaValidationError';
+import getSourceLocation from 'src/modules/getSourceLocation';
+import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from 'src/modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
+import { CE_MAEUM_ERROR_HANDLER_LOCALE_ID } from 'src/modules/interfaces/CE_MAEUM_ERROR_HANDLER_LOCALE_ID';
+import type IMaeumValidationError from 'src/modules/interfaces/IMaeumValidationError';
+import type TMaeumErrorHandlerHooks from 'src/modules/interfaces/TMaeumErrorHandlerHooks';
+import type TMaeumErrorHandlerLocales from 'src/modules/interfaces/TMaeumErrorHandlerLocales';
+import type TMaeumMessageIdHandles from 'src/modules/interfaces/TMaeumMessageIdHandles';
 
 export default function schemaValidationHandler(
   err: Error & { validation?: ErrorObject[] },

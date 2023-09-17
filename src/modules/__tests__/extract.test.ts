@@ -1,5 +1,5 @@
-import RestError from '#errors/RestError';
-import extractRestError from '#modules/extractRestError';
+import RestError from 'src/errors/RestError';
+import extractRestError from 'src/modules/extractRestError';
 
 describe('extractRestError', () => {
   test('undefined - Error', () => {

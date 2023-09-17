@@ -1,25 +1,25 @@
-import maeumRestErrorSchema from '#data/maeumRestErrorSchema';
-import maeumValidationErrorSchema from '#data/maeumValidationErrorSchema';
-import RestError from '#errors/RestError';
-import executeHook from '#modules/executeHook';
-import getLocaleHandler from '#modules/getLocaleHandler';
-import getMessageIdHandler from '#modules/getMessageIdHandler';
-import getSourceLocation from '#modules/getSourceLocation';
-import restErrorHandler from '#modules/handlers/restErrorHandler';
-import schemaValidationHandler from '#modules/handlers/schemaValidationHandler';
-import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from '#modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
-import { CE_MAEUM_ERROR_HANDLER_LOCALE_ID } from '#modules/interfaces/CE_MAEUM_ERROR_HANDLER_LOCALE_ID';
-import type { IMaeumErrorHandler } from '#modules/interfaces/IMaeumErrorHandler';
-import type IMaeumRestError from '#modules/interfaces/IMaeumRestError';
-import type { TMaeumEncryptor } from '#modules/interfaces/MaeumFunctions';
-import type TMaeumErrorHandlerHooks from '#modules/interfaces/TMaeumErrorHandlerHooks';
-import type TMaeumErrorHandlerLocales from '#modules/interfaces/TMaeumErrorHandlerLocales';
-import type TMaeumMessageIdHandles from '#modules/interfaces/TMaeumMessageIdHandles';
 import type { ErrorObject } from 'ajv';
 import fastJsonStringify, { type Options as FastJsonStringiftOptions } from 'fast-json-stringify';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
 import { isError, isFalse } from 'my-easy-fp';
+import maeumRestErrorSchema from 'src/data/maeumRestErrorSchema';
+import maeumValidationErrorSchema from 'src/data/maeumValidationErrorSchema';
+import RestError from 'src/errors/RestError';
+import executeHook from 'src/modules/executeHook';
+import getLocaleHandler from 'src/modules/getLocaleHandler';
+import getMessageIdHandler from 'src/modules/getMessageIdHandler';
+import getSourceLocation from 'src/modules/getSourceLocation';
+import restErrorHandler from 'src/modules/handlers/restErrorHandler';
+import schemaValidationHandler from 'src/modules/handlers/schemaValidationHandler';
+import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from 'src/modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
+import { CE_MAEUM_ERROR_HANDLER_LOCALE_ID } from 'src/modules/interfaces/CE_MAEUM_ERROR_HANDLER_LOCALE_ID';
+import type { IMaeumErrorHandler } from 'src/modules/interfaces/IMaeumErrorHandler';
+import type IMaeumRestError from 'src/modules/interfaces/IMaeumRestError';
+import type { TMaeumEncryptor } from 'src/modules/interfaces/MaeumFunctions';
+import type TMaeumErrorHandlerHooks from 'src/modules/interfaces/TMaeumErrorHandlerHooks';
+import type TMaeumErrorHandlerLocales from 'src/modules/interfaces/TMaeumErrorHandlerLocales';
+import type TMaeumMessageIdHandles from 'src/modules/interfaces/TMaeumMessageIdHandles';
 
 export default function errorHandler(
   handlers: IMaeumErrorHandler[],

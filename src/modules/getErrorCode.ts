@@ -1,4 +1,4 @@
-import type { TMaeumEncryptor } from '#modules/interfaces/MaeumFunctions';
+import type { TMaeumEncryptor } from 'src/modules/interfaces/MaeumFunctions';
 
 export default function getErrorCode(
   err: Error,
