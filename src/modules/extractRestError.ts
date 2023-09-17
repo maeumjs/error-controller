@@ -1,4 +1,4 @@
-import type IMaeumRestError from './interfaces/IMaeumRestError';
+import type IMaeumRestError from 'src/modules/interfaces/IMaeumRestError';
 
 function isValidType(value: unknown): value is string | number {
   return typeof value === 'string' || typeof value === 'number';

@@ -1,5 +1,5 @@
-import type IMaeumValidationError from '#modules/interfaces/IMaeumValidationError';
 import type { ErrorObject } from 'ajv';
+import type IMaeumValidationError from 'src/modules/interfaces/IMaeumValidationError';
 
 export default function getSchemaValidationError(
   errors: (ErrorObject | undefined)[],

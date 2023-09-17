@@ -1,8 +1,8 @@
-import type TMaeumErrorHandlerHooks from '#modules/interfaces/TMaeumErrorHandlerHooks';
-import type { IMaeumErrorHandlerHook } from '#modules/interfaces/TMaeumErrorHandlerHooks';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from './interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
+import { CE_MAEUM_DEFAULT_ERROR_HANDLER } from 'src/modules/interfaces/CE_MAEUM_DEFAULT_ERROR_HANDLER';
+import type IMaeumErrorHandlerHook from 'src/modules/interfaces/IMaeumErrorHandlerHook';
+import type TMaeumErrorHandlerHooks from 'src/modules/interfaces/TMaeumErrorHandlerHooks';
 
 export default function executeHook({
   hooks,
