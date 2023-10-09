@@ -1,9 +1,0 @@
-export const CE_MAEUM_DEFAULT_ERROR_HANDLER = {
-  COMMON: '$$-error-handler-common-execute-hook',
-  BAD_REQUEST: '$$-bad-request',
-  REST_ERROR: '$$-rest-error',
-  INTERNAL_SERVER_ERROR: '$$-internal-server-error',
-} as const;
-
-export type CE_MAEUM_DEFAULT_ERROR_HANDLER =
-  (typeof CE_MAEUM_DEFAULT_ERROR_HANDLER)[keyof typeof CE_MAEUM_DEFAULT_ERROR_HANDLER];
