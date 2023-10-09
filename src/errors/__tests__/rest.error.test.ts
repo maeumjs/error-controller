@@ -14,7 +14,7 @@ describe('RestError', () => {
       expect(reply).toMatchObject({
         code: '',
         message: 'unknown error raised',
-        translateArgs: undefined,
+        i18n: undefined,
         payload: undefined,
       });
     });
@@ -34,7 +34,7 @@ describe('RestError', () => {
     it('polyglot', () => {
       const obj = {
         code: 'asdf',
-        translateArgs: { phrase: 'a', options: { name: 'ironman' } },
+        i18n: { phrase: 'a', options: { name: 'ironman' } },
         payload: { name: 'ironman' },
       } satisfies TApiErrorReplyArgs;
 
@@ -87,7 +87,7 @@ describe('RestError', () => {
     });
 
     it('reply parameter with polyglot', () => {
-      const reply: TPartialApiErrorReplyArgs = { translateArgs: { phrase: 'p01' } };
+      const reply: TPartialApiErrorReplyArgs = { i18n: { phrase: 'p01' } };
       const err = new ApiError({ reply });
       expect(err.reply).toMatchObject(reply);
     });

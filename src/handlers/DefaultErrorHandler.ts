@@ -4,11 +4,11 @@ import { EncryptContiner, noop, safeStringify } from '@maeum/tools';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
-import { isError, parseBool } from 'my-easy-fp';
+import { isError } from 'my-easy-fp';
 
 export default class DefaultErrorHandler extends ErrorHandler {
   public override isSelected(err: Error & { validation?: ErrorObject[] }): boolean {
-    return parseBool(isError(err)) && err.validation != null;
+    return isError(err) != null && err.validation != null;
   }
 
   protected preHook(

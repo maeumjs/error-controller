@@ -30,28 +30,23 @@ export default class ErrorController {
     const fallbackMessage =
       args?.fallbackMessage ?? 'internal server error, please retry again later';
     const encryption = args?.encryption ?? true;
-    const translate = () => undefined;
+    const translate = args?.translate ?? (() => undefined);
 
     ErrorController.#it = new ErrorController(translate);
 
     if (args?.handlers != null && args?.handlers.length !== 0) {
       ErrorController.#it.add(...args.handlers);
     } else {
-      ErrorController.#it.add(
-        new SchemaErrorHandler({ type: 'serialize', encryption, translate, fallbackMessage }),
-      );
-      ErrorController.#it.add(
-        new ApiErrorHandler({ type: 'serialize', encryption, translate, fallbackMessage }),
-      );
+      ErrorController.#it.add(new SchemaErrorHandler({ encryption, translate, fallbackMessage }));
+      ErrorController.#it.add(new ApiErrorHandler({ encryption, translate, fallbackMessage }));
       ErrorController.#it.#fallback =
-        args?.fallback ??
-        new DefaultErrorHandler({ type: 'serialize', encryption, translate, fallbackMessage });
+        args?.fallback ?? new DefaultErrorHandler({ encryption, translate, fallbackMessage });
     }
 
     ErrorController.#isBootstrap = true;
   }
 
-  static handler() {
+  static get handler() {
     if (!ErrorController.#isBootstrap) {
       throw new Error('initialize with the `bootstrap` function before use');
     }
@@ -74,7 +69,6 @@ export default class ErrorController {
   constructor(translate: TTranslateFunction) {
     this.#handlers = [];
     this.#fallback = new DefaultErrorHandler({
-      type: 'serialize',
       encryption: true,
       translate,
       fallbackMessage: 'internal server error, please retry again later',
@@ -110,6 +104,6 @@ export default class ErrorController {
     const handler = atOrUndefined(handlers, 0);
     const selected = handler ?? this.#fallback;
 
-    selected.send(reply);
+    selected.handler(err, req, reply);
   }
 }

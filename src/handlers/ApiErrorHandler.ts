@@ -5,11 +5,11 @@ import { EncryptContiner, noop, safeStringify } from '@maeum/tools';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
-import { isError, parseBool } from 'my-easy-fp';
+import { isError } from 'my-easy-fp';
 
 export default class ApiErrorHandler extends ErrorHandler {
   public override isSelected(err: Error & { validation?: ErrorObject[] }): boolean {
-    return parseBool(isError(err)) && err instanceof ApiError;
+    return isError(err) != null && err instanceof ApiError;
   }
 
   protected preHook(
@@ -35,10 +35,10 @@ export default class ApiErrorHandler extends ErrorHandler {
     req: FastifyRequest,
     _reply: FastifyReply,
   ): void {
-    if (isError(err) && err instanceof ApiError) {
+    if (isError(err) != null && err instanceof ApiError) {
       const { code, payload } = err.reply;
       const message = this.getMessage(req, {
-        translate: err.reply.translateArgs,
+        translate: err.reply.i18n,
         message: err.message,
       });
 

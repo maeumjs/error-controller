@@ -81,11 +81,7 @@ export default abstract class ErrorHandler {
   }
 
   send(reply: FastifyReply) {
-    if (this.#option.type === 'send') {
-      reply.send(this.#payload);
-    } else {
-      reply.serialize(this.#payload);
-    }
+    reply.send(this.#payload);
   }
 
   handler(err: Error & { validation?: ErrorObject[] }, req: FastifyRequest, reply: FastifyReply) {
