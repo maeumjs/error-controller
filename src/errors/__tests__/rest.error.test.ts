@@ -49,7 +49,6 @@ describe('RestError', () => {
       const reply = ApiError.getRestErrorOption();
 
       expect(reply).toMatchObject({
-        status: 500,
         header: undefined,
         logging: undefined,
       });
@@ -57,7 +56,6 @@ describe('RestError', () => {
 
     it('parameters', () => {
       const obj = {
-        status: 400,
         header: { 'Content-Type': 'application/json' },
         logging: { name: 'ironman' },
       } satisfies Partial<IApiErrorOption>;
@@ -76,19 +74,19 @@ describe('RestError', () => {
 
     it('reply parameter with code', () => {
       const reply: TApiErrorReplyArgs = { code: 'err01', message: 'unknown error 001' };
-      const err = new ApiError({ reply });
+      const err = new ApiError(reply);
       expect(err.reply).toMatchObject(reply);
     });
 
     it('reply parameter without code', () => {
       const reply: TPartialApiErrorReplyArgs = { message: 'unknown error 001' };
-      const err = new ApiError({ reply });
+      const err = new ApiError(reply);
       expect(err.reply).toMatchObject(reply);
     });
 
     it('reply parameter with polyglot', () => {
       const reply: TPartialApiErrorReplyArgs = { i18n: { phrase: 'p01' } };
-      const err = new ApiError({ reply });
+      const err = new ApiError(reply);
       expect(err.reply).toMatchObject(reply);
     });
 
@@ -106,6 +104,17 @@ describe('RestError', () => {
 
       expect(r01.message).toEqual(err.message);
       expect(r01.stack).toEqual(err.stack);
+    });
+
+    it('reply parameter with code', () => {
+      const reply: TApiErrorReplyArgs = { code: 'err01', message: 'unknown error 001' };
+      const option = {
+        header: { 'accept-language': 'en' },
+        logging: { info: 'message' },
+      };
+      const err = new ApiError({ ...reply, $option: option });
+      expect(err.reply).toMatchObject(reply);
+      expect(err.option).toMatchObject(option);
     });
   });
 });

@@ -4,18 +4,21 @@ export type TApiErrorReplyArgs<TDataType = unknown> =
       message: string;
       i18n?: unknown;
       payload?: TDataType;
+      status?: number;
     }
   | {
       code: string;
       message?: string;
       i18n?: unknown;
       payload?: TDataType;
+      status?: number;
     }
   | {
       code: string;
       message: string;
       i18n: unknown;
       payload?: TDataType;
+      status?: number;
     };
 
 export type TPartialApiErrorReplyArgs<TDataType = unknown> =
@@ -24,10 +27,12 @@ export type TPartialApiErrorReplyArgs<TDataType = unknown> =
       message: string;
       i18n?: unknown;
       payload?: TDataType;
+      status?: number;
     }
   | {
       code?: string;
       message?: string;
       i18n?: unknown;
       payload?: TDataType;
+      status?: number;
     };

@@ -18,7 +18,7 @@ export default class ApiErrorHandler extends ErrorHandler {
     reply: FastifyReply,
   ): void {
     if (isError(err) && err instanceof ApiError) {
-      reply.status(err.option.status);
+      reply.status(err.reply.status);
 
       Object.entries(err.option.header ?? {}).forEach(([key, value]) => {
         reply.header(key, value);
@@ -34,7 +34,7 @@ export default class ApiErrorHandler extends ErrorHandler {
     err: Error & { validation?: ErrorObject[] },
     req: FastifyRequest,
     _reply: FastifyReply,
-  ): void {
+  ): { code: string; message?: string; payload?: unknown } {
     if (isError(err) != null && err instanceof ApiError) {
       const { code, payload } = err.reply;
       const message = this.getMessage(req, {
@@ -47,17 +47,17 @@ export default class ApiErrorHandler extends ErrorHandler {
           ? EncryptContiner.it.encrypt(code)
           : code;
 
-      this.payload = { code: encrypted, payload, message };
-    } else {
-      const code = getSourceLocation(err);
-      const { message } = err;
-      const encrypted =
-        this.option.encryption && EncryptContiner.isBootstrap
-          ? EncryptContiner.it.encrypt(code)
-          : code;
-
-      this.payload = { code: encrypted, message };
+      return { code: encrypted, payload, message };
     }
+
+    const code = getSourceLocation(err);
+    const { message } = err;
+    const encrypted =
+      this.option.encryption && EncryptContiner.isBootstrap
+        ? EncryptContiner.it.encrypt(code)
+        : code;
+
+    return { code: encrypted, message };
   }
 
   public stringify(data: unknown): string {

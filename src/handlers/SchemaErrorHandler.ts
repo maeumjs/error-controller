@@ -1,7 +1,7 @@
 import ErrorHandler from '#/handlers/ErrorHandler';
-import getSchemaValidationError from '#/modules/getSchemaValidationError';
 import getSourceLocation from '#/modules/getSourceLocation';
-import { EncryptContiner, noop, safeStringify } from '@maeum/tools';
+import type ISchemaErrorReply from '#/modules/interfaces/ISchemaErrorReply';
+import { EncryptContiner, getValidationErrorSummary, noop, safeStringify } from '@maeum/tools';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
@@ -27,7 +27,7 @@ export default class SchemaErrorHandler extends ErrorHandler {
     err: Error & { validation?: ErrorObject[] },
     req: FastifyRequest,
     _reply: FastifyReply,
-  ): void {
+  ): { code: string; message?: string; validation?: ISchemaErrorReply['validation'] } {
     if (isError(err) != null && err.validation != null) {
       const code = getSourceLocation(err);
       const message = this.getMessage(req, { message: err.message });
@@ -35,19 +35,19 @@ export default class SchemaErrorHandler extends ErrorHandler {
         this.option.encryption && EncryptContiner.isBootstrap
           ? EncryptContiner.it.encrypt(code)
           : code;
-      const validation = getSchemaValidationError(err.validation);
+      const validation = getValidationErrorSummary(err.validation);
 
-      this.payload = { code: encrypted, validation, message };
-    } else {
-      const code = getSourceLocation(err);
-      const message = this.getMessage(req, { message: err.message });
-      const encrypted =
-        this.option.encryption && EncryptContiner.isBootstrap
-          ? EncryptContiner.it.encrypt(code)
-          : code;
-
-      this.payload = { code: encrypted, message };
+      return { code: encrypted, validation, message };
     }
+
+    const code = getSourceLocation(err);
+    const message = this.getMessage(req, { message: err.message });
+    const encrypted =
+      this.option.encryption && EncryptContiner.isBootstrap
+        ? EncryptContiner.it.encrypt(code)
+        : code;
+
+    return { code: encrypted, message };
   }
 
   public stringify(data: unknown): string {

@@ -41,7 +41,6 @@ module.exports = {
         argsIgnorePattern: '^_.+$',
       },
     ],
-    'import/extensions': ['off'],
     '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
     // static function use this: void
     '@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
