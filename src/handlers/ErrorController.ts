@@ -25,7 +25,7 @@ export default class ErrorController {
     encryption?: boolean;
     fallback?: ErrorHandler;
     handlers?: ErrorHandler[];
-    fallbackMessage?: string;
+    fallbackMessage?: string | ((req: FastifyRequest) => string);
   }) {
     const fallbackMessage =
       args?.fallbackMessage ?? 'internal server error, please retry again later';
