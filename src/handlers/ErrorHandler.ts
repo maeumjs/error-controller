@@ -3,12 +3,9 @@ import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
 export default abstract class ErrorHandler {
-  #payload: unknown;
-
   #option: IErrorHandlerOption;
 
   constructor(option: IErrorHandlerOption) {
-    this.#payload = undefined;
     this.#option = option;
   }
 
@@ -42,18 +39,10 @@ export default abstract class ErrorHandler {
     err: Error & { validation?: ErrorObject[] },
     req: FastifyRequest,
     reply: FastifyReply,
-  ): void;
+  ): unknown;
 
   get option() {
     return this.#option;
-  }
-
-  get payload(): unknown {
-    return this.#payload;
-  }
-
-  set payload(value: unknown) {
-    this.#payload = value;
   }
 
   getMessage(req: FastifyRequest, args: { translate?: unknown; message?: string }) {
@@ -80,14 +69,19 @@ export default abstract class ErrorHandler {
     }
   }
 
-  send(reply: FastifyReply) {
-    reply.send(this.#payload);
+  send(reply: FastifyReply, payload: string) {
+    reply.send(payload);
   }
 
   handler(err: Error & { validation?: ErrorObject[] }, req: FastifyRequest, reply: FastifyReply) {
+    if ('setRequestError' in req && typeof req.setRequestError === 'function') {
+      req.setRequestError(err);
+    }
+
     this.preHook(err, req, reply);
-    this.serializor(err, req, reply);
-    this.send(reply);
+    const payload = this.serializor(err, req, reply);
+    const stringified = this.stringify(payload);
+    this.send(reply, stringified);
     this.postHook(err, req, reply);
   }
 }

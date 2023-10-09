@@ -2,6 +2,7 @@ import ApiErrorHandler from '#/handlers/ApiErrorHandler';
 import DefaultErrorHandler from '#/handlers/DefaultErrorHandler';
 import type ErrorHandler from '#/handlers/ErrorHandler';
 import SchemaErrorHandler from '#/handlers/SchemaErrorHandler';
+import type IErrorControllerOption from '#/handlers/interfaces/IErrorControllerOption';
 import type TTranslateFunction from '#/handlers/interfaces/TTranslateFunction';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
@@ -20,13 +21,7 @@ export default class ErrorController {
     return ErrorController.#isBootstrap;
   }
 
-  static bootstrap(args?: {
-    translate?: TTranslateFunction;
-    encryption?: boolean;
-    fallback?: ErrorHandler;
-    handlers?: ErrorHandler[];
-    fallbackMessage?: string | ((req: FastifyRequest) => string);
-  }) {
+  static bootstrap(args?: IErrorControllerOption) {
     const fallbackMessage =
       args?.fallbackMessage ?? 'internal server error, please retry again later';
     const encryption = args?.encryption ?? true;

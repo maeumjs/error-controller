@@ -26,7 +26,7 @@ export default class DefaultErrorHandler extends ErrorHandler {
     err: Error & { validation?: ErrorObject[] },
     req: FastifyRequest,
     _reply: FastifyReply,
-  ): void {
+  ): { code: string; message?: string } {
     const code = getSourceLocation(err);
     const message = this.getMessage(req, { message: err.message });
     const encrypted =
@@ -34,7 +34,7 @@ export default class DefaultErrorHandler extends ErrorHandler {
         ? EncryptContiner.it.encrypt(code)
         : code;
 
-    this.payload = { code: encrypted, message };
+    return { code: encrypted, message };
   }
 
   public stringify(data: unknown): string {
