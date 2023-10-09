@@ -31,6 +31,7 @@ const ApiValidationErrorJsonSchema = {
   },
   required: ['message', 'validation'],
   $id: 'api-validation-error-reply',
+  additionalProperties: true,
 };
 
 export default ApiValidationErrorJsonSchema;

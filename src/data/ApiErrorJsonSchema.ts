@@ -13,6 +13,7 @@ const ApiErrorJsonSchema = {
   },
   required: ['message'],
   $id: 'api-error-reply',
+  additionalProperties: true,
 };
 
 export default ApiErrorJsonSchema;

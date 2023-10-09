@@ -18,7 +18,7 @@ export default class ApiError<TDATA_TYPE = unknown> extends Error {
     return {
       code: reply?.code ?? '',
       message: reply?.message ?? 'unknown error raised',
-      translateArgs: reply?.translateArgs ?? undefined,
+      i18n: reply?.i18n ?? undefined,
       payload: reply?.payload ?? undefined,
     } satisfies TApiErrorReplyArgs;
   }
