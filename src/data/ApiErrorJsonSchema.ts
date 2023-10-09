@@ -1,4 +1,4 @@
-const maeumRestErrorSchema = {
+const ApiErrorJsonSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
@@ -10,11 +10,9 @@ const maeumRestErrorSchema = {
       type: 'string',
       description: 'description of error',
     },
-    data: {},
-    header: {},
   },
   required: ['message'],
-  $id: 'IMaeumRestError',
+  $id: 'api-error-reply',
 };
 
-export default maeumRestErrorSchema;
+export default ApiErrorJsonSchema;

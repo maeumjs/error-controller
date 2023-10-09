@@ -67,10 +67,25 @@ module.exports = {
       },
     },
     {
+      files: [
+        'src/handlers/ErrorHandler.ts',
+        'src/handlers/ApiErrorHandler.ts',
+        'src/handlers/SchemaErrorHandler.ts',
+        'src/handlers/DefaultErrorHandler.ts',
+      ],
+      rules: {
+        '@typescript-eslint/no-floating-promises': ['off'],
+        'class-methods-use-this': ['off'],
+      },
+    },
+    {
       files: ['**/__tests__/*.ts'],
       rules: {
         '@typescript-eslint/ban-ts-comment': ['off'],
         '@typescript-eslint/no-unsafe-assignment': ['off'],
+        '@typescript-eslint/no-unsafe-argument': ['off'],
+        '@typescript-eslint/no-unsafe-return': ['off'],
+        '@typescript-eslint/no-explicit-any': ['off'],
         'no-console': ['off'],
       },
     },

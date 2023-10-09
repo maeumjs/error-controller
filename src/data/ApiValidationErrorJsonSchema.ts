@@ -1,4 +1,4 @@
-const maeumValidationErrorSchema = {
+const ApiValidationErrorJsonSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
@@ -30,7 +30,7 @@ const maeumValidationErrorSchema = {
     },
   },
   required: ['message', 'validation'],
-  $id: 'IMaeumValidationError',
+  $id: 'api-validation-error-reply',
 };
 
-export default maeumValidationErrorSchema;
+export default ApiValidationErrorJsonSchema;

@@ -2,9 +2,9 @@ import { dts } from 'rollup-plugin-dts';
 
 const config = [
   {
-    input: 'dist/types/origin/index.d.ts',
+    input: 'dist/types/origin/src/index.d.ts',
     output: [{ file: 'dist/types/index.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts({ tsconfig: 'tsconfig.prod.json' })],
   },
 ];
 
