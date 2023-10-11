@@ -29,11 +29,18 @@ export default class ErrorController {
 
     ErrorController.#it = new ErrorController(translate);
 
-    if (args?.handlers != null && args?.handlers.length !== 0) {
-      ErrorController.#it.add(...args.handlers);
-    } else {
+    if (args?.handlers == null || args?.handlers.length === 0) {
       ErrorController.#it.add(new SchemaErrorHandler({ encryption, translate, fallbackMessage }));
       ErrorController.#it.add(new ApiErrorHandler({ encryption, translate, fallbackMessage }));
+      ErrorController.#it.#fallback =
+        args?.fallback ?? new DefaultErrorHandler({ encryption, translate, fallbackMessage });
+    } else {
+      if (args?.includeDefaultHandler ?? false) {
+        ErrorController.#it.add(new SchemaErrorHandler({ encryption, translate, fallbackMessage }));
+        ErrorController.#it.add(new ApiErrorHandler({ encryption, translate, fallbackMessage }));
+      }
+
+      ErrorController.#it.add(...args.handlers);
       ErrorController.#it.#fallback =
         args?.fallback ?? new DefaultErrorHandler({ encryption, translate, fallbackMessage });
     }
