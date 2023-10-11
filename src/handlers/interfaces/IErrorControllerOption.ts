@@ -6,6 +6,7 @@ export default interface IErrorControllerOption {
   translate?: TTranslateFunction;
   encryption?: boolean;
   fallback?: ErrorHandler;
+  includeDefaultHandler?: boolean;
   handlers?: ErrorHandler[];
   fallbackMessage?: string | ((req: FastifyRequest) => string);
 }

@@ -13,11 +13,11 @@ export default class SchemaErrorHandler extends ErrorHandler {
   }
 
   protected preHook(
-    _err: Error & { validation?: ErrorObject[] },
+    err: Error & { statusCode?: number; validation?: ErrorObject[] },
     _req: FastifyRequest,
     reply: FastifyReply,
   ): void {
-    reply.status(httpStatusCodes.BAD_REQUEST);
+    reply.status(err.statusCode ?? httpStatusCodes.BAD_REQUEST);
     reply.header('Content-Type', 'application/json');
   }
 

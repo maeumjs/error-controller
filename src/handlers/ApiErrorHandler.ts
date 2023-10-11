@@ -13,7 +13,7 @@ export default class ApiErrorHandler extends ErrorHandler {
   }
 
   protected preHook(
-    err: Error & { validation?: ErrorObject[] },
+    err: Error & { statusCode?: number; validation?: ErrorObject[] },
     _req: FastifyRequest,
     reply: FastifyReply,
   ): void {
@@ -24,7 +24,7 @@ export default class ApiErrorHandler extends ErrorHandler {
         reply.header(key, value);
       });
     } else {
-      reply.status(httpStatusCodes.INTERNAL_SERVER_ERROR);
+      reply.status(err.statusCode ?? httpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
