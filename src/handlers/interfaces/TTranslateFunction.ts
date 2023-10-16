@@ -1,5 +1,3 @@
-import type { FastifyRequest } from 'fastify';
-
-type TTranslateFunction = (req: FastifyRequest, option: unknown) => string | undefined;
+type TTranslateFunction = (language: string, option: unknown) => string | undefined;
 
 export default TTranslateFunction;

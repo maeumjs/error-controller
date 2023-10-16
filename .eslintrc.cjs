@@ -67,10 +67,20 @@ module.exports = {
     },
     {
       files: [
+        'src/handlers/ErrorController.ts',
+        'src/handlers/interfaces/IErrorControllerOption.ts',
+      ],
+      rules: {
+        '@typescript-eslint/no-explicit-any': ['off'],
+      },
+    },
+    {
+      files: [
         'src/handlers/ErrorHandler.ts',
         'src/handlers/ApiErrorHandler.ts',
         'src/handlers/SchemaErrorHandler.ts',
         'src/handlers/DefaultErrorHandler.ts',
+        'src/handlers/HTTPErrorHandler.ts',
       ],
       rules: {
         '@typescript-eslint/no-floating-promises': ['off'],
