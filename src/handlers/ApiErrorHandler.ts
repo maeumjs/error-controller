@@ -1,45 +1,56 @@
 import ApiError from '#/errors/ApiError';
-import ErrorHandler from '#/handlers/ErrorHandler';
+import HTTPErrorHandler from '#/handlers/HTTPErrorHandler';
+import type THTTPErrorHandlerParameters from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import getSourceLocation from '#/modules/getSourceLocation';
 import { EncryptContiner, noop, safeStringify } from '@maeum/tools';
-import type { ErrorObject } from 'ajv';
-import type { FastifyReply, FastifyRequest } from 'fastify';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 
-export default class ApiErrorHandler extends ErrorHandler {
-  public override isSelected(err: Error & { validation?: ErrorObject[] }): boolean {
-    return isError(err) != null && err instanceof ApiError;
+export default class ApiErrorHandler extends HTTPErrorHandler {
+  public override isSelected(args: THTTPErrorHandlerParameters): boolean {
+    if (!('$kind' in args) || args.$kind !== 'fastify') {
+      return false;
+    }
+
+    if (isError(args.err) == null) {
+      return false;
+    }
+
+    if (args.err instanceof ApiError) {
+      return false;
+    }
+
+    return true;
   }
 
-  protected preHook(
-    err: Error & { statusCode?: number; validation?: ErrorObject[] },
-    _req: FastifyRequest,
-    reply: FastifyReply,
-  ): void {
+  protected preHook(args: THTTPErrorHandlerParameters): void {
+    super.preHook(args);
+
+    const { err } = args;
+
     if (isError(err) && err instanceof ApiError) {
-      reply.status(err.reply.status);
+      args.reply.status(err.reply.status);
 
       Object.entries(err.option.header ?? {}).forEach(([key, value]) => {
-        reply.header(key, value);
+        args.reply.header(key, value);
       });
     } else {
-      reply.status(err.statusCode ?? httpStatusCodes.INTERNAL_SERVER_ERROR);
+      args.reply.status(httpStatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
   protected postHook = noop;
 
-  protected serializor(
-    err: Error & { validation?: ErrorObject[] },
-    req: FastifyRequest,
-    _reply: FastifyReply,
-  ): { code: string; message?: string; payload?: unknown } {
-    if (isError(err) != null && err instanceof ApiError) {
-      const { code, payload } = err.reply;
-      const message = this.getMessage(req, {
-        translate: err.reply.i18n,
-        message: err.message,
+  protected serializor(args: THTTPErrorHandlerParameters): {
+    code: string;
+    message?: string;
+    payload?: unknown;
+  } {
+    if (isError(args.err) != null && args.err instanceof ApiError) {
+      const { code, payload } = args.err.reply;
+      const message = this.getMessage(args, {
+        translate: args.err.reply.i18n,
+        message: args.err.message,
       });
 
       const encrypted =
@@ -50,8 +61,8 @@ export default class ApiErrorHandler extends ErrorHandler {
       return { code: encrypted, payload, message };
     }
 
-    const code = getSourceLocation(err);
-    const { message } = err;
+    const code = getSourceLocation(args.err);
+    const { message } = args.err;
     const encrypted =
       this.option.encryption && EncryptContiner.isBootstrap
         ? EncryptContiner.it.encrypt(code)

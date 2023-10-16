@@ -1,8 +1,9 @@
+import type TGetLanguageFunction from '#/handlers/interfaces/TGetLanguageFunction';
 import type TTranslateFunction from '#/handlers/interfaces/TTranslateFunction';
-import type { FastifyRequest } from 'fastify';
 
-export default interface IErrorHandlerOption {
+export default interface IErrorHandlerOption<T> {
   encryption: boolean;
-  fallbackMessage: string | ((req: FastifyRequest) => string);
+  fallbackMessage: string | ((args: T) => string);
+  getLanguage: TGetLanguageFunction<T>;
   translate: TTranslateFunction;
 }

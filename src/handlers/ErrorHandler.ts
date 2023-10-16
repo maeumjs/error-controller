@@ -1,19 +1,13 @@
 import type IErrorHandlerOption from '#/handlers/interfaces/IErrorHandlerOption';
-import type { ErrorObject } from 'ajv';
-import type { FastifyReply, FastifyRequest } from 'fastify';
 
-export default abstract class ErrorHandler {
-  #option: IErrorHandlerOption;
+export default abstract class ErrorHandler<T> {
+  #option: IErrorHandlerOption<T>;
 
-  constructor(option: IErrorHandlerOption) {
+  constructor(option: IErrorHandlerOption<T>) {
     this.#option = option;
   }
 
-  public abstract isSelected(
-    err: Error & { validation?: ErrorObject[] },
-    req: FastifyRequest,
-    reply: FastifyReply,
-  ): boolean;
+  public abstract isSelected(args: T): boolean;
 
   public abstract stringify(data: unknown): string;
 
@@ -23,65 +17,48 @@ export default abstract class ErrorHandler {
    * 이런 경우에 send나 serialize에 강제로 데이터를 보낼 수 있는데 이 때 header의 content-type
    * 데이터 등을 변경해야 할 수 있다. 이 때 hook을 사용한다
    */
-  protected abstract preHook(
-    err: Error & { validation?: ErrorObject[] },
-    req: FastifyRequest,
-    reply: FastifyReply,
-  ): void;
+  protected abstract preHook(args: T): void;
 
-  protected abstract postHook(
-    err: Error & { validation?: ErrorObject[] },
-    req: FastifyRequest,
-    reply: FastifyReply,
-  ): void;
+  protected abstract postHook(args: T): void;
 
-  protected abstract serializor(
-    err: Error & { validation?: ErrorObject[] },
-    req: FastifyRequest,
-    reply: FastifyReply,
-  ): unknown;
+  protected abstract serializor(args: T): unknown;
 
   get option() {
     return this.#option;
   }
 
-  getMessage(req: FastifyRequest, args: { translate?: unknown; message?: string }) {
+  getMessage(args: T, i18n: { translate?: unknown; message?: string }) {
     try {
-      if (args.translate != null) {
-        const message = this.#option.translate(req, args.translate);
+      if (i18n.translate != null) {
+        const language = this.#option.getLanguage(args);
+        const message = this.#option.translate(language, i18n.translate);
 
         if (message != null) {
           return message;
         }
       }
 
-      if (args.message != null) {
-        return args.message;
+      if (i18n.message != null) {
+        return i18n.message;
       }
 
       if (typeof this.#option.fallbackMessage === 'string') {
         return this.#option.fallbackMessage;
       }
 
-      return this.#option.fallbackMessage(req);
+      return this.#option.fallbackMessage(args);
     } catch {
       return undefined;
     }
   }
 
-  send(reply: FastifyReply, payload: string) {
-    reply.send(payload);
-  }
+  abstract finalize(args: T, payload: string): void;
 
-  handler(err: Error & { validation?: ErrorObject[] }, req: FastifyRequest, reply: FastifyReply) {
-    if ('setRequestError' in req && typeof req.setRequestError === 'function') {
-      req.setRequestError(err);
-    }
-
-    this.preHook(err, req, reply);
-    const payload = this.serializor(err, req, reply);
+  handler(args: T) {
+    this.preHook(args);
+    const payload = this.serializor(args);
     const stringified = this.stringify(payload);
-    this.send(reply, stringified);
-    this.postHook(err, req, reply);
+    this.finalize(args, stringified);
+    this.postHook(args);
   }
 }

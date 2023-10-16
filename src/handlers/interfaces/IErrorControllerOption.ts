@@ -1,12 +1,14 @@
 import type ErrorHandler from '#/handlers/ErrorHandler';
+import type TGetLanguageFunction from '#/handlers/interfaces/TGetLanguageFunction';
 import type TTranslateFunction from '#/handlers/interfaces/TTranslateFunction';
-import type { FastifyRequest } from 'fastify';
 
 export default interface IErrorControllerOption {
   translate?: TTranslateFunction;
+  getLanguage?: TGetLanguageFunction<unknown>;
+  defaultLanguage?: string;
+  fallbackMessage?: string | ((args: unknown) => string);
   encryption?: boolean;
-  fallback?: ErrorHandler;
+  fallback?: ErrorHandler<any>;
   includeDefaultHandler?: boolean;
-  handlers?: ErrorHandler[];
-  fallbackMessage?: string | ((req: FastifyRequest) => string);
+  handlers?: ErrorHandler<any>[];
 }
