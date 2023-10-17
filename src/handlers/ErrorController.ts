@@ -10,7 +10,6 @@ import getLanguageFromRequestHeader from '#/modules/getLanguageFromRequestHeader
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { atOrUndefined } from 'my-easy-fp';
-import { isPromise } from 'util/types';
 
 export default class ErrorController {
   static #it: ErrorController;
@@ -116,11 +115,15 @@ export default class ErrorController {
     };
   }
 
-  static wrap<T = void>(handler: () => Promise<T>): () => Promise<T>;
-  static wrap<T = void>(handler: () => T): () => T;
-  static wrap<T = void>(handler: () => T | Promise<T>): (() => T) | (() => Promise<T>) {
+  static withoutCatch<T = void>(handler: () => Promise<T>): () => Promise<T>;
+  static withoutCatch<T = void>(handler: () => T): () => T;
+  static withoutCatch<T = void>(handler: () => T | Promise<T>): (() => T) | (() => Promise<T>) {
     if (!(handler instanceof Function)) {
       throw new Error('handler only permit function');
+    }
+
+    if (!ErrorController.#isBootstrap) {
+      throw new Error('ErrorController.wrap need to bootstrap');
     }
 
     if (handler.constructor.name === 'AsyncFunction') {
@@ -150,16 +153,44 @@ export default class ErrorController {
     return wrappedSyncHandler;
   }
 
-  static async handle(handler: () => void | Promise<void>) {
-    try {
-      const handled = handler();
-
-      if (isPromise(handled)) {
-        await handled;
-      }
-    } catch (err) {
-      ErrorController.#it.finalize(err);
+  static wrap<T = void>(handler: () => Promise<T>): () => Promise<T | undefined>;
+  static wrap<T = void>(handler: () => T): () => T | undefined;
+  static wrap<T = void>(
+    handler: () => T | undefined | Promise<T | undefined>,
+  ): (() => T | undefined) | (() => Promise<T | undefined>) {
+    if (!(handler instanceof Function)) {
+      throw new Error('handler only permit function');
     }
+
+    if (!ErrorController.#isBootstrap) {
+      throw new Error('ErrorController.wrap need to bootstrap');
+    }
+
+    if (handler.constructor.name === 'AsyncFunction') {
+      const wrappedAsyncHandler = async () => {
+        try {
+          const handled = await handler();
+          return handled;
+        } catch (err) {
+          ErrorController.#it.finalize(err);
+          return undefined;
+        }
+      };
+
+      return wrappedAsyncHandler;
+    }
+
+    const wrappedSyncHandler = (() => {
+      try {
+        const handled = handler();
+        return handled;
+      } catch (err) {
+        ErrorController.#it.finalize(err);
+        return undefined;
+      }
+    }) as () => T;
+
+    return wrappedSyncHandler;
   }
 
   #handlers: ErrorHandler<any>[];

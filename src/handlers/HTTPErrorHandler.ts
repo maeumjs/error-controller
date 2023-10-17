@@ -1,5 +1,4 @@
 import ErrorHandler from '#/handlers/ErrorHandler';
-import type IErrorHandlerOption from '#/handlers/interfaces/IErrorHandlerOption';
 import type THTTPErrorHandlerParameters from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import getSourceLocation from '#/modules/getSourceLocation';
 import { EncryptContiner, noop, safeStringify } from '@maeum/tools';
@@ -7,14 +6,6 @@ import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 
 export default class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerParameters> {
-  #option: IErrorHandlerOption<THTTPErrorHandlerParameters>;
-
-  constructor(option: IErrorHandlerOption<THTTPErrorHandlerParameters>) {
-    super(option);
-
-    this.#option = option;
-  }
-
   public isSelected(args: THTTPErrorHandlerParameters): boolean {
     if (!('$kind' in args) || args.$kind !== 'fastify') {
       return false;
@@ -32,7 +23,7 @@ export default class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerPara
   }
 
   get option() {
-    return this.#option;
+    return this.$option;
   }
 
   /**
@@ -79,8 +70,8 @@ export default class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerPara
   getMessage(args: THTTPErrorHandlerParameters, i18n: { translate?: unknown; message?: string }) {
     try {
       if (i18n.translate != null) {
-        const language = this.#option.getLanguage(args);
-        const message = this.#option.translate(language, i18n.translate);
+        const language = this.$option.getLanguage(args);
+        const message = this.$option.translate(language, i18n.translate);
 
         if (message != null) {
           return message;
@@ -91,11 +82,11 @@ export default class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerPara
         return i18n.message;
       }
 
-      if (typeof this.#option.fallbackMessage === 'string') {
-        return this.#option.fallbackMessage;
+      if (typeof this.$option.fallbackMessage === 'string') {
+        return this.$option.fallbackMessage;
       }
 
-      return this.#option.fallbackMessage(args);
+      return this.$option.fallbackMessage(args);
     } catch {
       return undefined;
     }
