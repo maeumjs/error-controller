@@ -1,10 +1,10 @@
 import type IErrorHandlerOption from '#/handlers/interfaces/IErrorHandlerOption';
 
 export default abstract class ErrorHandler<T> {
-  #option: IErrorHandlerOption<T>;
+  protected $option: IErrorHandlerOption<T>;
 
   constructor(option: IErrorHandlerOption<T>) {
-    this.#option = option;
+    this.$option = option;
   }
 
   public abstract isSelected(args: T): boolean;
@@ -24,14 +24,14 @@ export default abstract class ErrorHandler<T> {
   protected abstract serializor(args: T): unknown;
 
   get option() {
-    return this.#option;
+    return this.$option;
   }
 
   getMessage(args: T, i18n: { translate?: unknown; message?: string }) {
     try {
       if (i18n.translate != null) {
-        const language = this.#option.getLanguage(args);
-        const message = this.#option.translate(language, i18n.translate);
+        const language = this.$option.getLanguage(args);
+        const message = this.$option.translate(language, i18n.translate);
 
         if (message != null) {
           return message;
@@ -42,11 +42,11 @@ export default abstract class ErrorHandler<T> {
         return i18n.message;
       }
 
-      if (typeof this.#option.fallbackMessage === 'string') {
-        return this.#option.fallbackMessage;
+      if (typeof this.$option.fallbackMessage === 'string') {
+        return this.$option.fallbackMessage;
       }
 
-      return this.#option.fallbackMessage(args);
+      return this.$option.fallbackMessage(args);
     } catch {
       return undefined;
     }
