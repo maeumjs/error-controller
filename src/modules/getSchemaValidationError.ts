@@ -1,7 +1,7 @@
-import type ISchemaErrorReply from '#/modules/interfaces/ISchemaErrorReply';
+import type { ISchemaErrorReply } from '#/modules/interfaces/ISchemaErrorReply';
 import type { ErrorObject } from 'ajv';
 
-export default function getSchemaValidationError(
+export function getSchemaValidationError(
   errors: (ErrorObject | undefined)[],
 ): ISchemaErrorReply['validation'] {
   return errors

@@ -1,6 +1,6 @@
 import acceptLanguage from 'accept-language';
 
-export default function getLanguageFromRequestHeader(
+export function getLanguageFromRequestHeader(
   defaultLanguage: string,
   languages?: string | string[],
 ): string {

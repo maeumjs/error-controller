@@ -1,11 +1,11 @@
-import ErrorHandler from '#/handlers/ErrorHandler';
-import type THTTPErrorHandlerParameters from '#/handlers/interfaces/THTTPErrorHandlerParameters';
-import getSourceLocation from '#/modules/getSourceLocation';
+import { ErrorHandler } from '#/handlers/ErrorHandler';
+import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
+import { getSourceLocation } from '#/modules/getSourceLocation';
 import { EncryptContiner, noop, safeStringify } from '@maeum/tools';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 
-export default class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerParameters> {
+export class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerParameters> {
   public isSelected(args: THTTPErrorHandlerParameters): boolean {
     if (!('$kind' in args) || args.$kind !== 'fastify') {
       return false;

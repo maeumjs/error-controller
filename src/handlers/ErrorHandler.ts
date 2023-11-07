@@ -1,6 +1,6 @@
-import type IErrorHandlerOption from '#/handlers/interfaces/IErrorHandlerOption';
+import type { IErrorHandlerOption } from '#/handlers/interfaces/IErrorHandlerOption';
 
-export default abstract class ErrorHandler<T> {
+export abstract class ErrorHandler<T> {
   protected $option: IErrorHandlerOption<T>;
 
   constructor(option: IErrorHandlerOption<T>) {

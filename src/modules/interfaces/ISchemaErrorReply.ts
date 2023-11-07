@@ -1,4 +1,4 @@
-export default interface ISchemaErrorReply {
+export interface ISchemaErrorReply {
   code?: string;
 
   message: string;

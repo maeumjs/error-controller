@@ -1,9 +1,6 @@
 import ErrorStackParser from 'error-stack-parser';
 
-export default function getRewindStack<T extends Error>(
-  err: T,
-  rewindSize?: number,
-): string | undefined {
+export function getRewindStack<T extends Error>(err: T, rewindSize?: number): string | undefined {
   try {
     const frames = ErrorStackParser.parse(err);
     return `Error: ${err.message}${frames

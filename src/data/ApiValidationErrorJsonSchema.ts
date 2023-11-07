@@ -1,4 +1,4 @@
-const ApiValidationErrorJsonSchema = {
+export const ApiValidationErrorJsonSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
@@ -33,5 +33,3 @@ const ApiValidationErrorJsonSchema = {
   $id: 'api-validation-error-reply',
   additionalProperties: true,
 };
-
-export default ApiValidationErrorJsonSchema;

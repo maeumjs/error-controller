@@ -1,5 +1,5 @@
-import ApiError from '#/errors/ApiError';
-import type IApiErrorOption from '#/errors/interfaces/IApiErrorOption';
+import { ApiError } from '#/errors/ApiError';
+import type { IApiErrorOption } from '#/errors/interfaces/IApiErrorOption';
 import type {
   TApiErrorReplyArgs,
   TPartialApiErrorReplyArgs,
