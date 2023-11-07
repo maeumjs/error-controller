@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type IApiErrorOption from '#/errors/interfaces/IApiErrorOption';
+import type { IApiErrorOption } from '#/errors/interfaces/IApiErrorOption';
 import type {
   TApiErrorReplyArgs,
   TPartialApiErrorReplyArgs,
 } from '#/errors/interfaces/TApiErrorReplyArgs';
-import getSourceLocation from '#/modules/getSourceLocation';
+import { getSourceLocation } from '#/modules/getSourceLocation';
 import httpStatusCodes from 'http-status-codes';
 import type { SetRequired } from 'type-fest';
 
-export default class ApiError<TDATA_TYPE = unknown> extends Error {
+export class ApiError<TDATA_TYPE = unknown> extends Error {
   #reply: SetRequired<TApiErrorReplyArgs, 'status'>;
 
   #option: IApiErrorOption;

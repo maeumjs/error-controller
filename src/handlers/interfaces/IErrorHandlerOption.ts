@@ -1,7 +1,7 @@
-import type TGetLanguageFunction from '#/handlers/interfaces/TGetLanguageFunction';
-import type TTranslateFunction from '#/handlers/interfaces/TTranslateFunction';
+import type { TGetLanguageFunction } from '#/handlers/interfaces/TGetLanguageFunction';
+import type { TTranslateFunction } from '#/handlers/interfaces/TTranslateFunction';
 
-export default interface IErrorHandlerOption<T> {
+export interface IErrorHandlerOption<T> {
   encryption: boolean;
   fallbackMessage: string | ((args: T) => string);
   getLanguage: TGetLanguageFunction<T>;

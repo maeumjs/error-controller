@@ -1,4 +1,4 @@
-import getSourceLocation from '#/modules/getSourceLocation';
+import { getSourceLocation } from '#/modules/getSourceLocation';
 import { describe, expect, it, jest } from '@jest/globals';
 import ErrorStackParser from 'error-stack-parser';
 import crpyto from 'node:crypto';
@@ -18,7 +18,7 @@ describe('getSourceLocation', () => {
   });
 
   it('parse exception, fallback empty', () => {
-    const fallback = 'code12345678';
+    const fallback = '942627e2-9659-46d5-84f4-4c6902329ea3';
     const spyH01 = jest.spyOn(ErrorStackParser, 'parse').mockImplementationOnce(() => []);
     const spyH02 = jest.spyOn(crpyto, 'randomUUID').mockImplementationOnce(() => fallback);
 
@@ -55,7 +55,7 @@ describe('getSourceLocation', () => {
 
   it('catch without fallback', () => {
     const invalid = 'not expect' as any;
-    const fallback = 'code12345678';
+    const fallback = '942627e2-9659-46d5-84f4-4c6902329ea3';
     const spyH01 = jest.spyOn(crpyto, 'randomUUID').mockImplementationOnce(() => fallback);
 
     const code = getSourceLocation(invalid);

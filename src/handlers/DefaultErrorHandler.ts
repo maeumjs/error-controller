@@ -1,7 +1,7 @@
-import ErrorHandler from '#/handlers/ErrorHandler';
+import { ErrorHandler } from '#/handlers/ErrorHandler';
 import { noop, safeStringify } from '@maeum/tools';
 
-export default class DefaultErrorHandler extends ErrorHandler<Error> {
+export class DefaultErrorHandler extends ErrorHandler<Error> {
   public override isSelected(): boolean {
     return true;
   }

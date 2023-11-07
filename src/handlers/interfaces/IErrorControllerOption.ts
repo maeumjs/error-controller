@@ -1,8 +1,8 @@
-import type ErrorHandler from '#/handlers/ErrorHandler';
-import type TGetLanguageFunction from '#/handlers/interfaces/TGetLanguageFunction';
-import type TTranslateFunction from '#/handlers/interfaces/TTranslateFunction';
+import type { ErrorHandler } from '#/handlers/ErrorHandler';
+import type { TGetLanguageFunction } from '#/handlers/interfaces/TGetLanguageFunction';
+import type { TTranslateFunction } from '#/handlers/interfaces/TTranslateFunction';
 
-export default interface IErrorControllerOption {
+export interface IErrorControllerOption {
   translate?: TTranslateFunction;
   getLanguage?: TGetLanguageFunction<unknown>;
   defaultLanguage?: string;

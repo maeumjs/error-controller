@@ -1,4 +1,4 @@
-const ApiErrorJsonSchema = {
+export const ApiErrorJsonSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
   properties: {
@@ -15,5 +15,3 @@ const ApiErrorJsonSchema = {
   $id: 'api-error-reply',
   additionalProperties: true,
 };
-
-export default ApiErrorJsonSchema;

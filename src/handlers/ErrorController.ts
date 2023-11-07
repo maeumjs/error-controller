@@ -1,17 +1,17 @@
-import ApiErrorHandler from '#/handlers/ApiErrorHandler';
-import DefaultErrorHandler from '#/handlers/DefaultErrorHandler';
-import type ErrorHandler from '#/handlers/ErrorHandler';
-import HTTPErrorHandler from '#/handlers/HTTPErrorHandler';
-import SchemaErrorHandler from '#/handlers/SchemaErrorHandler';
-import type IErrorControllerOption from '#/handlers/interfaces/IErrorControllerOption';
-import type THTTPErrorHandlerParameters from '#/handlers/interfaces/THTTPErrorHandlerParameters';
-import type TTranslateFunction from '#/handlers/interfaces/TTranslateFunction';
-import getLanguageFromRequestHeader from '#/modules/getLanguageFromRequestHeader';
+import { ApiErrorHandler } from '#/handlers/ApiErrorHandler';
+import { DefaultErrorHandler } from '#/handlers/DefaultErrorHandler';
+import type { ErrorHandler } from '#/handlers/ErrorHandler';
+import { HTTPErrorHandler } from '#/handlers/HTTPErrorHandler';
+import { SchemaErrorHandler } from '#/handlers/SchemaErrorHandler';
+import type { IErrorControllerOption } from '#/handlers/interfaces/IErrorControllerOption';
+import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
+import type { TTranslateFunction } from '#/handlers/interfaces/TTranslateFunction';
+import { getLanguageFromRequestHeader } from '#/modules/getLanguageFromRequestHeader';
 import type { ErrorObject } from 'ajv';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { atOrUndefined } from 'my-easy-fp';
 
-export default class ErrorController {
+export class ErrorController {
   static #it: ErrorController;
 
   static get it(): ErrorController {

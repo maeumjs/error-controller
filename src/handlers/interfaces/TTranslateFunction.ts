@@ -1,3 +1,1 @@
-type TTranslateFunction = (language: string, option: unknown) => string | undefined;
-
-export default TTranslateFunction;
+export type TTranslateFunction = (language: string, option: unknown) => string | undefined;
