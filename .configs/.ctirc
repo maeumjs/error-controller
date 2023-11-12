@@ -82,14 +82,14 @@
       // overwrite each index.ts file
       // @mode create, bundle
       // @default false
-      "overwrite": false,
+      "overwrite": true,
 
       // Create a backup file if the `index.ts` file already exists.
       // This option only works if the `overwrite` option is enabled.
       //
       // @mode create, bundle
       // @defulat true
-      "backup": true,
+      "backup": false,
 
       // When generating the `index.ts` file, decide how you want to generate it
       //
