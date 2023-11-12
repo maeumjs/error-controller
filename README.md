@@ -2,7 +2,7 @@
 
 ![ts](https://flat.badgen.net/badge/Built%20With/TypeScript/blue)
 [![Download Status](https://img.shields.io/npm/dw/@maeum/error-controller.svg?style=flat-square)](https://npmcharts.com/compare/@maeum/error-controller?minimal=true)
-[![Github Star](https://img.shields.io/github/stars/@maeum/error-controller.svg?style=flat-square)](https://github.com/maeumjs/error-controller)
+[![Github Star](https://img.shields.io/github/stars/maeumjs/error-controller.svg?style=flat-square)](https://github.com/maeumjs/error-controller)
 [![Github Issues](https://img.shields.io/github/issues/maeumjs/error-controller)](https://github.com/maeumjs/error-controller/issues)
 [![NPM version](https://img.shields.io/npm/v/@maeum/error-controller.svg?style=flat-square)](https://www.npmjs.com/package/@maeum/error-controller)
 [![License](https://img.shields.io/npm/l/@maeum/error-controller.svg?style=flat-square)](https://github.com/maeumjs/error-controller/blob/master/LICENSE)
