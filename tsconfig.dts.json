@@ -1,6 +1,17 @@
 {
   "extends": "./tsconfig.prod.json",
   "compilerOptions": {
-    "skipLibCheck": false
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "dist/types/origin",
+    "emitDeclarationOnly": true,
+    "rootDir": "src"
+  },
+  "tsc-alias": {
+    "replacers": {
+      "base-url": {
+        "enabled": false
+      }
+    }
   }
 }
