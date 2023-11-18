@@ -151,6 +151,12 @@ module.exports = {
         'no-console': ['off'],
       },
     },
+    {
+      files: ['prepublish.cjs'],
+      rules: {
+        'no-console': ['off'],
+      },
+    },
   ],
   settings: {
     'import/resolver': {
