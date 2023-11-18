@@ -1,6 +1,6 @@
 {
   "name": "@maeum/error-controller",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "maeum error controller",
   "engines": {
     "node": ">=18"
