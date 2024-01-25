@@ -1,3 +1,4 @@
+import { ApiError } from '#/errors/ApiError';
 import { ErrorHandler } from '#/handlers/ErrorHandler';
 import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import { getSourceLocation } from '#/modules/getSourceLocation';
@@ -52,7 +53,10 @@ export class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerParameters> 
 
   protected serializor(args: THTTPErrorHandlerParameters): { code: string; message?: string } {
     const code = getSourceLocation(args.err);
-    const message = this.getMessage(args, { message: args.err.message });
+    const message = this.getMessage(args, {
+      translate: args.err instanceof ApiError ? args.err.reply.i18n : undefined,
+      message: args.err.message,
+    });
     const encrypted =
       this.option.encryption && EncryptContiner.isBootstrap
         ? EncryptContiner.it.encrypt(code)
