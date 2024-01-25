@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "ctix": "ctix build --config .configs/.ctirc",
-    "ctix-rm": "ctix remove -p ./tsconfig.json --config .configs/.ctirc --force-yes --remove-backup",
+    "ctix-rm": "ctix remove --config .configs/.ctirc --force-yes --remove-backup",
     "build": "pnpm run clean && tsc --incremental --project tsconfig.prod.json",
     "dts": "tsc -p tsconfig.dts.json",
     "dts-alias": "tsc-alias -p tsconfig.dts.json",
