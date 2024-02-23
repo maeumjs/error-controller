@@ -46,7 +46,7 @@ export class ApiError<TDATA_TYPE = unknown> extends Error {
       | Error
       | ApiError<TDATA_TYPE>
       | (TPartialApiErrorReplyArgs<TDATA_TYPE> & {
-          $option?: Partial<IApiErrorOption>;
+          option?: Partial<IApiErrorOption>;
         }),
   ) {
     if (typeof args === 'string') {
@@ -82,7 +82,7 @@ export class ApiError<TDATA_TYPE = unknown> extends Error {
       this.#option = option;
     } else {
       const reply = ApiError.getRestErrorReply(args);
-      const option = ApiError.getRestErrorOption(args?.$option);
+      const option = ApiError.getRestErrorOption(args?.option);
 
       super(reply.message);
 

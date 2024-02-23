@@ -112,7 +112,7 @@ describe('RestError', () => {
         header: { 'accept-language': 'en' },
         logging: { info: 'message' },
       };
-      const err = new ApiError({ ...reply, $option: option });
+      const err = new ApiError({ ...reply, option });
       expect(err.reply).toMatchObject(reply);
       expect(err.option).toMatchObject(option);
     });

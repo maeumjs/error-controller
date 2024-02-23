@@ -1,3 +1,4 @@
+import { ApiError } from '#/errors/ApiError';
 import { HTTPErrorHandler } from '#/handlers/HTTPErrorHandler';
 import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import { getSourceLocation } from '#/modules/getSourceLocation';
@@ -26,7 +27,8 @@ export class SchemaErrorHandler extends HTTPErrorHandler {
   protected preHook(args: THTTPErrorHandlerParameters): void {
     super.preHook(args);
 
-    args.reply.status(args.err.statusCode ?? httpStatusCodes.BAD_REQUEST);
+    const statusCode = args.err instanceof ApiError ? args.err.reply.status : args.err.statusCode;
+    args.reply.status(statusCode ?? httpStatusCodes.BAD_REQUEST);
   }
 
   protected postHook = noop;
