@@ -16,7 +16,7 @@ export class ApiErrorHandler extends HTTPErrorHandler {
       return false;
     }
 
-    if (args.err instanceof ApiError) {
+    if (!(args.err instanceof ApiError)) {
       return false;
     }
 
@@ -57,6 +57,10 @@ export class ApiErrorHandler extends HTTPErrorHandler {
         this.option.encryption && EncryptContiner.isBootstrap
           ? EncryptContiner.it.encrypt(code)
           : code;
+
+      if (typeof payload === 'object') {
+        return { code: encrypted, ...payload, message };
+      }
 
       return { code: encrypted, payload, message };
     }
