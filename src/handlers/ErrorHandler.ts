@@ -1,10 +1,14 @@
 import type { IErrorHandlerOption } from '#/handlers/interfaces/IErrorHandlerOption';
+import type { IClassContainer } from '@maeum/tools';
 
 export abstract class ErrorHandler<T> {
   protected $option: IErrorHandlerOption<T>;
 
-  constructor(option: IErrorHandlerOption<T>) {
+  protected $container: IClassContainer;
+
+  constructor(container: IClassContainer, option: IErrorHandlerOption<T>) {
     this.$option = option;
+    this.$container = container;
   }
 
   public abstract isSelected(args: T): boolean;

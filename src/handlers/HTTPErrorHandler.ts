@@ -2,7 +2,7 @@ import { ApiError } from '#/errors/ApiError';
 import { ErrorHandler } from '#/handlers/ErrorHandler';
 import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import { getSourceLocation } from '#/modules/getSourceLocation';
-import { EncryptContiner, noop, safeStringify } from '@maeum/tools';
+import { ENCRYPTIONER_SYMBOL_KEY, noop, safeStringify, type Encryptioner } from '@maeum/tools';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 
@@ -52,15 +52,13 @@ export class HTTPErrorHandler extends ErrorHandler<THTTPErrorHandlerParameters> 
   protected postHook = noop;
 
   protected serializor(args: THTTPErrorHandlerParameters): { code: string; message?: string } {
+    const encryptioner = this.$container.resolve<Encryptioner>(ENCRYPTIONER_SYMBOL_KEY);
     const code = getSourceLocation(args.err);
     const message = this.getMessage(args, {
       translate: args.err instanceof ApiError ? args.err.reply.i18n : undefined,
       message: args.err.message,
     });
-    const encrypted =
-      this.option.encryption && EncryptContiner.isBootstrap
-        ? EncryptContiner.it.encrypt(code)
-        : code;
+    const encrypted = this.option.encryption ? encryptioner.encrypt(code) : code;
 
     return { code: encrypted, message };
   }

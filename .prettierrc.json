@@ -7,17 +7,15 @@
   "plugins": ["prettier-plugin-organize-imports"],
   "overrides": [
     {
-      "files": "*.md",
+      "files": "**/*.md",
       "options": {
         "parser": "markdown"
       }
     },
     {
       "files": [
-        ".vscode/launch.json",
-        ".vscode/settings.json",
-        "tsconfig.eslint.json",
-        "tsconfig.prod.json",
+        ".vscode/**/*.json",
+        "tsconfig.*.json",
         "tsconfig.json"
       ],
       "options": {
