@@ -1,212 +1,30 @@
-import { ApiErrorHandler } from '#/handlers/ApiErrorHandler';
 import { DefaultErrorHandler } from '#/handlers/DefaultErrorHandler';
 import type { ErrorHandler } from '#/handlers/ErrorHandler';
-import { HTTPErrorHandler } from '#/handlers/HTTPErrorHandler';
-import { SchemaErrorHandler } from '#/handlers/SchemaErrorHandler';
-import type { IErrorControllerOption } from '#/handlers/interfaces/IErrorControllerOption';
-import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import type { TTranslateFunction } from '#/handlers/interfaces/TTranslateFunction';
-import { getLanguageFromRequestHeader } from '#/modules/getLanguageFromRequestHeader';
-import type { ErrorObject } from 'ajv';
-import type { FastifyReply, FastifyRequest } from 'fastify';
+import type { IClassContainer } from '@maeum/tools';
 import { atOrUndefined } from 'my-easy-fp';
 
 export class ErrorController {
-  static #it: ErrorController;
-
-  static get it(): ErrorController {
-    return ErrorController.#it;
-  }
-
-  static #isBootstrap: boolean = false;
-
-  static get isBootstrap(): boolean {
-    return ErrorController.#isBootstrap;
-  }
-
-  static bootstrap(args?: IErrorControllerOption) {
-    const fallbackMessage =
-      args?.fallbackMessage ?? 'internal server error, please retry again later';
-    const encryption = args?.encryption ?? true;
-    const translate = args?.translate ?? (() => undefined);
-    const defaultLanguage = args?.defaultLanguage ?? 'en';
-    const getLanguage =
-      args?.getLanguage ??
-      ((languageArgs: THTTPErrorHandlerParameters) =>
-        getLanguageFromRequestHeader(
-          defaultLanguage,
-          languageArgs.req.headers['accept-languages'],
-        ));
-
-    ErrorController.#it = new ErrorController(translate);
-
-    if (args?.handlers == null || args?.handlers.length === 0) {
-      ErrorController.#it.add(
-        new SchemaErrorHandler({
-          encryption,
-          translate,
-          fallbackMessage,
-          getLanguage,
-        }),
-      );
-      ErrorController.#it.add(
-        new ApiErrorHandler({ encryption, translate, fallbackMessage, getLanguage }),
-      );
-      ErrorController.#it.add(
-        new HTTPErrorHandler({ encryption, translate, fallbackMessage, getLanguage }),
-      );
-
-      ErrorController.#it.#fallback =
-        args?.fallback ??
-        new DefaultErrorHandler({
-          encryption,
-          translate,
-          fallbackMessage,
-          getLanguage: () => 'en',
-        });
-    } else {
-      if (args?.includeDefaultHandler ?? false) {
-        ErrorController.#it.add(
-          new SchemaErrorHandler({
-            encryption,
-            translate,
-            fallbackMessage,
-            getLanguage,
-          }),
-        );
-        ErrorController.#it.add(
-          new ApiErrorHandler({ encryption, translate, fallbackMessage, getLanguage }),
-        );
-        ErrorController.#it.add(
-          new HTTPErrorHandler({ encryption, translate, fallbackMessage, getLanguage }),
-        );
-      }
-
-      ErrorController.#it.add(...args.handlers);
-      ErrorController.#it.#fallback =
-        args?.fallback ??
-        new DefaultErrorHandler({
-          encryption,
-          translate,
-          fallbackMessage,
-          getLanguage: () => 'en',
-        });
-    }
-
-    ErrorController.#isBootstrap = true;
-  }
-
-  static get fastifyHandler() {
-    if (!ErrorController.#isBootstrap) {
-      throw new Error('initialize with the `bootstrap` function before use');
-    }
-
-    return function globalErrorHandler(
-      err: Error & { validation?: ErrorObject[]; statusCode?: number },
-      req: FastifyRequest,
-      reply: FastifyReply,
-    ) {
-      ErrorController.#it.finalize({
-        $kind: 'fastify',
-        err,
-        req,
-        reply,
-      } satisfies THTTPErrorHandlerParameters);
-    };
-  }
-
-  static withoutCatch<T = void>(handler: () => Promise<T>): () => Promise<T>;
-  static withoutCatch<T = void>(handler: () => T): () => T;
-  static withoutCatch<T = void>(handler: () => T | Promise<T>): (() => T) | (() => Promise<T>) {
-    if (!(handler instanceof Function)) {
-      throw new Error('handler only permit function');
-    }
-
-    if (!ErrorController.#isBootstrap) {
-      throw new Error('ErrorController.wrap need to bootstrap');
-    }
-
-    if (handler.constructor.name === 'AsyncFunction') {
-      const wrappedAsyncHandler = async () => {
-        try {
-          const handled = await handler();
-          return handled;
-        } catch (err) {
-          ErrorController.#it.finalize(err);
-          throw err;
-        }
-      };
-
-      return wrappedAsyncHandler;
-    }
-
-    const wrappedSyncHandler = (() => {
-      try {
-        const handled = handler();
-        return handled;
-      } catch (err) {
-        ErrorController.#it.finalize(err);
-        throw err;
-      }
-    }) as () => T;
-
-    return wrappedSyncHandler;
-  }
-
-  static wrap<T = void>(handler: () => Promise<T>): () => Promise<T | undefined>;
-  static wrap<T = void>(handler: () => T): () => T | undefined;
-  static wrap<T = void>(
-    handler: () => T | undefined | Promise<T | undefined>,
-  ): (() => T | undefined) | (() => Promise<T | undefined>) {
-    if (!(handler instanceof Function)) {
-      throw new Error('handler only permit function');
-    }
-
-    if (!ErrorController.#isBootstrap) {
-      throw new Error('ErrorController.wrap need to bootstrap');
-    }
-
-    if (handler.constructor.name === 'AsyncFunction') {
-      const wrappedAsyncHandler = async () => {
-        try {
-          const handled = await handler();
-          return handled;
-        } catch (err) {
-          ErrorController.#it.finalize(err);
-          return undefined;
-        }
-      };
-
-      return wrappedAsyncHandler;
-    }
-
-    const wrappedSyncHandler = (() => {
-      try {
-        const handled = handler();
-        return handled;
-      } catch (err) {
-        ErrorController.#it.finalize(err);
-        return undefined;
-      }
-    }) as () => T;
-
-    return wrappedSyncHandler;
-  }
-
   #handlers: ErrorHandler<any>[];
 
   #fallback: ErrorHandler<any>;
 
   #translate: TTranslateFunction;
 
-  constructor(translate: TTranslateFunction) {
+  constructor(
+    container: IClassContainer,
+    translate: TTranslateFunction,
+    fallback?: ErrorHandler<unknown>,
+  ) {
     this.#handlers = [];
-    this.#fallback = new DefaultErrorHandler({
-      encryption: true,
-      translate,
-      fallbackMessage: 'internal server error, please retry again later',
-      getLanguage: () => 'en',
-    });
+    this.#fallback =
+      fallback ??
+      new DefaultErrorHandler(container, {
+        encryption: true,
+        translate,
+        fallbackMessage: 'internal server error, please retry again later',
+        getLanguage: () => 'en',
+      });
     this.#translate = translate;
   }
 

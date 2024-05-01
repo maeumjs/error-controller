@@ -3,7 +3,13 @@ import { HTTPErrorHandler } from '#/handlers/HTTPErrorHandler';
 import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import { getSourceLocation } from '#/modules/getSourceLocation';
 import type { ISchemaErrorReply } from '#/modules/interfaces/ISchemaErrorReply';
-import { EncryptContiner, getValidationErrorSummary, noop, safeStringify } from '@maeum/tools';
+import {
+  ENCRYPTIONER_SYMBOL_KEY,
+  getValidationErrorSummary,
+  noop,
+  safeStringify,
+  type Encryptioner,
+} from '@maeum/tools';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 
@@ -41,10 +47,8 @@ export class SchemaErrorHandler extends HTTPErrorHandler {
     if (isError(args.err) != null && args.err.validation != null) {
       const code = getSourceLocation(args.err);
       const message = this.getMessage(args, { message: args.err.message });
-      const encrypted =
-        this.option.encryption && EncryptContiner.isBootstrap
-          ? EncryptContiner.it.encrypt(code)
-          : code;
+      const encryptioner = this.$container.resolve<Encryptioner>(ENCRYPTIONER_SYMBOL_KEY);
+      const encrypted = this.option.encryption ? encryptioner.encrypt(code) : code;
       const validation = getValidationErrorSummary(args.err.validation);
 
       return { code: encrypted, validation, message };
@@ -52,10 +56,8 @@ export class SchemaErrorHandler extends HTTPErrorHandler {
 
     const code = getSourceLocation(args.err);
     const message = this.getMessage(args, { message: args.err.message });
-    const encrypted =
-      this.option.encryption && EncryptContiner.isBootstrap
-        ? EncryptContiner.it.encrypt(code)
-        : code;
+    const encryptioner = this.$container.resolve<Encryptioner>(ENCRYPTIONER_SYMBOL_KEY);
+    const encrypted = this.option.encryption ? encryptioner.encrypt(code) : code;
 
     return { code: encrypted, message };
   }
