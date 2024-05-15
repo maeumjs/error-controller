@@ -5,6 +5,7 @@
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "pnpm@9.1.0",
   "scripts": {
     "clean": "rimraf dist",
     "ctix": "ctix build --config .configs/.ctirc",
