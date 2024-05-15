@@ -1,4 +1,4 @@
-import { ERROR_CONTROLLER_SYMBOL_KEY } from '#/declarations/ERROR_CONTROLLER_SYMBOL_KEY';
+import { $YMBOL_KEY_ERROR_CONTROLLER } from '#/declarations/SYMBOL_KEY_ERROR_CONTROLLER';
 import { ApiErrorHandler } from '#/handlers/ApiErrorHandler';
 import { ErrorController } from '#/handlers/ErrorController';
 import { HTTPErrorHandler } from '#/handlers/HTTPErrorHandler';
@@ -56,6 +56,6 @@ export function makeErrorController(container: IClassContainer, args?: IErrorCon
 
     errorController.add(...args.handlers);
 
-    container.register(ERROR_CONTROLLER_SYMBOL_KEY, errorController);
+    container.register($YMBOL_KEY_ERROR_CONTROLLER, errorController);
   }
 }

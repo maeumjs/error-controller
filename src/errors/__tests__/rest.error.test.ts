@@ -4,7 +4,7 @@ import type {
   TApiErrorReplyArgs,
   TPartialApiErrorReplyArgs,
 } from '#/errors/interfaces/TApiErrorReplyArgs';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 
 describe('RestError', () => {
   describe('getRestErrorReply', () => {
