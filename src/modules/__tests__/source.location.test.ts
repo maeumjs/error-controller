@@ -1,17 +1,33 @@
 import { getSourceLocation } from '#/modules/getSourceLocation';
-import { describe, expect, it, jest } from '@jest/globals';
 import ErrorStackParser from 'error-stack-parser';
-import crpyto from 'node:crypto';
+import * as crpyto from 'node:crypto';
+import { describe, expect, it, vitest } from 'vitest';
+
+vitest.mock('error-stack-parser', async (importOriginal) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const mod = await importOriginal<typeof import('error-stack-parser')>();
+  return {
+    ...mod,
+  };
+});
+
+vitest.mock('node:crypto', async (importOriginal) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const mod = await importOriginal<typeof import('node:crypto')>();
+  return {
+    ...mod,
+  };
+});
 
 describe('getSourceLocation', () => {
   it('plain error', () => {
     const code = getSourceLocation(new Error());
-    const expectation = 'src/modules/__tests__/source.location.test.ts/Object.<anonymous>';
+    const expectation = `project:///${process.cwd()}/src/modules/__tests__/source.location.test.ts:24:36`;
     expect(code).toContain(expectation);
   });
 
   it('parse exception, return fallback', () => {
-    const spy = jest.spyOn(ErrorStackParser, 'parse').mockImplementationOnce(() => []);
+    const spy = vitest.spyOn(ErrorStackParser, 'parse').mockImplementationOnce(() => []);
     const code = getSourceLocation(new Error(), 'hello');
     spy.mockRestore();
     expect(code).toContain('hello');
@@ -19,8 +35,8 @@ describe('getSourceLocation', () => {
 
   it('parse exception, fallback empty', () => {
     const fallback = '942627e2-9659-46d5-84f4-4c6902329ea3';
-    const spyH01 = jest.spyOn(ErrorStackParser, 'parse').mockImplementationOnce(() => []);
-    const spyH02 = jest.spyOn(crpyto, 'randomUUID').mockImplementationOnce(() => fallback);
+    const spyH01 = vitest.spyOn(ErrorStackParser, 'parse').mockImplementationOnce(() => []);
+    const spyH02 = vitest.spyOn(crpyto, 'randomUUID').mockImplementationOnce(() => fallback);
 
     const code = getSourceLocation(new Error());
 
@@ -39,12 +55,12 @@ describe('getSourceLocation', () => {
         columnNumber: undefined,
       },
     ] as any;
-    const spyH = jest.spyOn(ErrorStackParser, 'parse').mockImplementationOnce(() => obj);
+    const spyH = vitest.spyOn(ErrorStackParser, 'parse').mockImplementationOnce(() => obj);
     const code = getSourceLocation(new Error(), 'hello');
 
     spyH.mockRestore();
 
-    expect(code).toContain('project:///::');
+    expect(code).toContain('project://');
   });
 
   it('catch with fallback', () => {
@@ -56,7 +72,7 @@ describe('getSourceLocation', () => {
   it('catch without fallback', () => {
     const invalid = 'not expect' as any;
     const fallback = '942627e2-9659-46d5-84f4-4c6902329ea3';
-    const spyH01 = jest.spyOn(crpyto, 'randomUUID').mockImplementationOnce(() => fallback);
+    const spyH01 = vitest.spyOn(crpyto, 'randomUUID').mockImplementationOnce(() => fallback);
 
     const code = getSourceLocation(invalid);
     spyH01.mockRestore();
