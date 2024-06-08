@@ -1,4 +1,4 @@
-import { $YMBOL_KEY_ERROR_CONTROLLER } from '#/declarations/SYMBOL_KEY_ERROR_CONTROLLER';
+import { CE_DI } from '#/di/CE_DI';
 import { ApiErrorHandler } from '#/handlers/ApiErrorHandler';
 import { ErrorController } from '#/handlers/ErrorController';
 import { HTTPErrorHandler } from '#/handlers/HTTPErrorHandler';
@@ -56,6 +56,6 @@ export function makeErrorController(container: IClassContainer, args?: IErrorCon
 
     errorController.add(...args.handlers);
 
-    container.register($YMBOL_KEY_ERROR_CONTROLLER, errorController);
+    container.register(CE_DI.ERROR_CONTROLLER, errorController);
   }
 }
