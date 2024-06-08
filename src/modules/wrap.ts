@@ -1,4 +1,4 @@
-import { $YMBOL_KEY_ERROR_CONTROLLER } from '#/declarations/SYMBOL_KEY_ERROR_CONTROLLER';
+import { CE_DI } from '#/di/CE_DI';
 import type { ErrorController } from '#/handlers/ErrorController';
 import type { IClassContainer } from '@maeum/tools';
 import { isFalse } from 'my-easy-fp';
@@ -16,7 +16,7 @@ export function wrap<T = void>(
     throw new Error('handler only permit function');
   }
 
-  const controller = container.resolve<ErrorController>($YMBOL_KEY_ERROR_CONTROLLER);
+  const controller = container.resolve<ErrorController>(CE_DI.ERROR_CONTROLLER);
 
   if (handler.constructor.name === 'AsyncFunction') {
     const wrappedAsyncHandler = async () => {
