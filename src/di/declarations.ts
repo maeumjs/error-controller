@@ -1,3 +1,5 @@
+/** @ctix-declaration */
+
 import type { CE_DI } from '#/di/CE_DI';
 import type { ErrorController } from '#/handlers/ErrorController';
 import '@maeum/tools';
