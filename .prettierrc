@@ -15,7 +15,9 @@
     {
       "files": [
         ".vscode/**/*.json",
-        "tsconfig.*.json",
+        "tsconfig.dts.json",
+        "tsconfig.prod.json",
+        "tsconfig.eslint.json",
         "tsconfig.json"
       ],
       "options": {
