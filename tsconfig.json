@@ -16,7 +16,7 @@
     "sourceMap": true /* Generates corresponding '.map' file. */,
     "outDir": "./dist" /* Redirect output structure to the directory. */,
     "removeComments": true /* Do not emit comments to output. */,
-    "importHelpers": true /* Import emit helpers from 'tslib'. */,
+    "importHelpers": false /* Import emit helpers from 'tslib'. */,
     "newLine": "lf",
 
     /* Strict Type-Checking Options */

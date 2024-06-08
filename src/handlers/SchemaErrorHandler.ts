@@ -4,7 +4,7 @@ import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErr
 import { getSourceLocation } from '#/modules/getSourceLocation';
 import type { ISchemaErrorReply } from '#/modules/interfaces/ISchemaErrorReply';
 import {
-  ENCRYPTIONER_SYMBOL_KEY,
+  CE_DI as TOOLS_DI,
   getValidationErrorSummary,
   noop,
   safeStringify,
@@ -47,7 +47,7 @@ export class SchemaErrorHandler extends HTTPErrorHandler {
     if (isError(args.err) != null && args.err.validation != null) {
       const code = getSourceLocation(args.err);
       const message = this.getMessage(args, { message: args.err.message });
-      const encryptioner = this.$container.resolve<Encryptioner>(ENCRYPTIONER_SYMBOL_KEY);
+      const encryptioner = this.$container.resolve<Encryptioner>(TOOLS_DI.ENCRYPTIONER);
       const encrypted = this.option.encryption ? encryptioner.encrypt(code) : code;
       const validation = getValidationErrorSummary(args.err.validation);
 
@@ -56,7 +56,7 @@ export class SchemaErrorHandler extends HTTPErrorHandler {
 
     const code = getSourceLocation(args.err);
     const message = this.getMessage(args, { message: args.err.message });
-    const encryptioner = this.$container.resolve<Encryptioner>(ENCRYPTIONER_SYMBOL_KEY);
+    const encryptioner = this.$container.resolve<Encryptioner>(TOOLS_DI.ENCRYPTIONER);
     const encrypted = this.option.encryption ? encryptioner.encrypt(code) : code;
 
     return { code: encrypted, message };

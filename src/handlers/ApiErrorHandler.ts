@@ -2,7 +2,7 @@ import { ApiError } from '#/errors/ApiError';
 import { HTTPErrorHandler } from '#/handlers/HTTPErrorHandler';
 import type { THTTPErrorHandlerParameters } from '#/handlers/interfaces/THTTPErrorHandlerParameters';
 import { getSourceLocation } from '#/modules/getSourceLocation';
-import { ENCRYPTIONER_SYMBOL_KEY, noop, safeStringify, type Encryptioner } from '@maeum/tools';
+import { CE_DI as TOOLS_DI, noop, safeStringify, type Encryptioner } from '@maeum/tools';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 
@@ -46,7 +46,7 @@ export class ApiErrorHandler extends HTTPErrorHandler {
     message?: string;
     payload?: unknown;
   } {
-    const encryptioner = this.$container.resolve<Encryptioner>(ENCRYPTIONER_SYMBOL_KEY);
+    const encryptioner = this.$container.resolve<Encryptioner>(TOOLS_DI.ENCRYPTIONER);
 
     if (isError(args.err) != null && args.err instanceof ApiError) {
       const { code, payload } = args.err.reply;
