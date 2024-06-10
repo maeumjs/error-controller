@@ -36,26 +36,32 @@ export function makeErrorController(container: IClassContainer, args?: IErrorCon
     errorController.add(
       new HTTPErrorHandler(container, { encryption, translate, fallbackMessage, getLanguage }),
     );
-  } else {
-    if (args?.includeDefaultHandler ?? false) {
-      errorController.add(
-        new SchemaErrorHandler(container, {
-          encryption,
-          translate,
-          fallbackMessage,
-          getLanguage,
-        }),
-      );
-      errorController.add(
-        new ApiErrorHandler(container, { encryption, translate, fallbackMessage, getLanguage }),
-      );
-      errorController.add(
-        new HTTPErrorHandler(container, { encryption, translate, fallbackMessage, getLanguage }),
-      );
-    }
-
-    errorController.add(...args.handlers);
 
     container.register(CE_DI.ERROR_CONTROLLER, errorController);
+
+    return errorController;
   }
+
+  if (args?.includeDefaultHandler ?? false) {
+    errorController.add(
+      new SchemaErrorHandler(container, {
+        encryption,
+        translate,
+        fallbackMessage,
+        getLanguage,
+      }),
+    );
+    errorController.add(
+      new ApiErrorHandler(container, { encryption, translate, fallbackMessage, getLanguage }),
+    );
+    errorController.add(
+      new HTTPErrorHandler(container, { encryption, translate, fallbackMessage, getLanguage }),
+    );
+  }
+
+  errorController.add(...args.handlers);
+
+  container.register(CE_DI.ERROR_CONTROLLER, errorController);
+
+  return errorController;
 }
